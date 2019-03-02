@@ -15,8 +15,8 @@
 */
 
 const int IntPin = A3; /* Definition of the interrupt pin. You can change according to your board /*
-//Class initialization with the I2C addresses
-i2cEncoderLibV2 Encoder(0x01); /* A0 is solderedA*/
+  //Class initialization with the I2C addresses*/
+i2cEncoderLibV2 Encoder(0x61); /* A0 is solderedA */
 
 
 void setup(void)
@@ -33,11 +33,11 @@ void setup(void)
       RMOD_X1= Encoder configured as X1.
       RGB_ENCODER= type of encoder is RGB, change to STD_ENCODER in case you are using a normal rotary encoder.
   */
-
+  Encoder.reset();
   Encoder.begin(INT_DATA | WRAP_DISABLE | DIRE_LEFT | IPUP_ENABLE | RMOD_X1 | RGB_ENCODER);
-//  Encoder.begin(INT_DATA | WRAP_DISABLE | DIRE_LEFT | IPUP_ENABLE | RMOD_X1 | STD_ENCODER); // try also this!
-//  Encoder.begin(INT_DATA | WRAP_ENABLE | DIRE_LEFT | IPUP_ENABLE | RMOD_X1 | RGB_ENCODER);  // try also this!
-  
+  //  Encoder.begin(INT_DATA | WRAP_DISABLE | DIRE_LEFT | IPUP_ENABLE | RMOD_X1 | STD_ENCODER); // try also this!
+  //  Encoder.begin(INT_DATA | WRAP_ENABLE | DIRE_LEFT | IPUP_ENABLE | RMOD_X1 | RGB_ENCODER);  // try also this!
+
   Encoder.writeCounter((int32_t)0); /* Reset the counter value */
   Encoder.writeMax((int32_t)10); /* Set the maximum threshold*/
   Encoder.writeMin((int32_t) - 10); /* Set the minimum threshold */
@@ -48,7 +48,7 @@ void setup(void)
 }
 
 void loop() {
-  uint8_t enc_cnt;
+
   if (digitalRead(IntPin) == LOW) {
     if ( Encoder.updateStatus()) {
       if ( Encoder.readStatus(RINC)) {
@@ -56,51 +56,51 @@ void loop() {
         Serial.println( Encoder.readCounterByte());
 
         /* Write here your code */
-        
+
       }
       if ( Encoder.readStatus(RDEC)) {
         Serial.print("Decrement: ");
         Serial.println( Encoder.readCounterByte());
-        
+
         /* Write here your code */
-        
+
       }
 
       if ( Encoder.readStatus(RMAX)) {
         Serial.print("Maximum threshold: ");
         Serial.println( Encoder.readCounterByte());
-        
+
         /* Write here your code */
-        
+
       }
 
       if ( Encoder.readStatus(RMIN)) {
         Serial.print("Minimum threshold: ");
         Serial.println( Encoder.readCounterByte());
-        
+
         /* Write here your code */
-        
+
       }
 
       if ( Encoder.readStatus(PUSHR)) {
         Serial.println("Push button Released");
-        
+
         /* Write here your code */
-        
+
       }
 
       if ( Encoder.readStatus(PUSHP)) {
         Serial.println("Push button Pressed");
-        
+
         /* Write here your code */
-        
+
       }
 
       if ( Encoder.readStatus(PUSHD)) {
         Serial.println("Double push!");
-        
+
         /* Write here your code */
-        
+
       }
     }
   }

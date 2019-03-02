@@ -11,7 +11,7 @@
    When the encoder LED is GREEN it's possible to select the item.
    By clicking the encoder the LED became BLUE and it's possible to change the value of the item.
    With a double push the item values is store in the EEPROM of the encoder.
-   The LED return GREEN and again it's possbile to select another item. 
+   The LED return GREEN and again it's possbile to select another item.
 
 
   Connections with WEMOS board:
@@ -74,6 +74,12 @@ void encoder_Double_pushed(i2cEncoderLibV2* obj, SourceInt e) {
 
 }
 
+// Interurpt function when the INT pin goes low
+void encoder_interrupt(void) {
+  if ( Encoder.updateStatus()) {
+    menu();
+  }
+}
 
 void setup(void)
 {
@@ -82,6 +88,8 @@ void setup(void)
   Encoder.reset(); /* Reset the I2C encoder V2 and wait 100ms */
 
   pinMode(IntPin, INPUT);
+  attachInterrupt(digitalPinToInterrupt(IntPin), encoder_interrupt, FALLING ); // Enable the interrupt on the INT pin
+
   /*
       INT_DATA= The register are considered integer.
       WRAP_ENABLE= The WRAP option is enabled
@@ -115,7 +123,7 @@ void setup(void)
   /* initialize the item values to the minimum value */
   /* Initialie also the EEPROM contenet */
   for (uint8_t i = 0; i < 4; i++) {
-    
+
     val[i] = Encoder.readEEPROM(EEPROM_START_ADD + i);
 
     if ( (val[i] > max_val[i]) || (val[i] < min_val[i])) {
@@ -129,12 +137,7 @@ void setup(void)
 
 
 void loop() {
-
-  if (digitalRead(IntPin) == LOW) {
-    if ( Encoder.updateStatus()) {
-      menu();
-    }
-  }
+ //Nothin in the loop,
 }
 
 
