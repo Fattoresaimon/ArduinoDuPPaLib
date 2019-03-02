@@ -8,7 +8,7 @@ All the boards are available on [Tindie!](https://www.tindie.com/stores/Saimon/)
 
 Currently supported boards:
 
-- [I2C Encoder V2](https://github.com/Fattoresaimon/I2CEncoderV2)
+- [I2C Encoder V2](https://github.com/Fattoresaimon/I2CEncoderV2) Lirbary description [here](https://github.com/Fattoresaimon/ArduinoDuPPaLib/blob/master/examples/I2CEncoderV2/README.md)
 
 
 
