@@ -8,7 +8,7 @@ All the boards are available on [Tindie!](https://www.tindie.com/stores/Saimon/)
 
 Currently supported boards:
 
-- [I2C Encoder V2](https://github.com/Fattoresaimon/I2CEncoderV2)
+- [I2C Encoder V2](https://github.com/Fattoresaimon/I2CEncoderV2) Library description [here](https://github.com/Fattoresaimon/ArduinoDuPPaLib/blob/master/examples/I2CEncoderV2/README.md)
 
 
 
@@ -16,7 +16,7 @@ Currently supported boards:
 
 #### Step 1:
 
-Download the [zip file](https://github.com/Fattoresaimon/ArduinoDuPPaLib/releases/download/v1.0.0/ArduinoDuPPaLib.zip) of the last release
+Download the [zip file](https://github.com/Fattoresaimon/ArduinoDuPPaLib/archive/v1.0.0.zip) of the last release
 
 #### Step2
 
