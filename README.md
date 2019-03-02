@@ -27,4 +27,4 @@ In the windows select the downloaded ZIP file.
 
 
 
-If everting is done correctly under the examples there will be the **DuPPa Library** section.
+If everything is done correctly, under the examples there will be the **DuPPa Library** section.
