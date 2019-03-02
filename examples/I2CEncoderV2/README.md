@@ -3,7 +3,7 @@
 
 ## Introduction
 
-Here you can find the library of the [I2C Encoder V2](https://github.com/Fattoresaimon/I2CEncoderV2) for the Arduino IDE.
+Here you can find the library description of the [I2C Encoder V2](https://github.com/Fattoresaimon/I2CEncoderV2) for the Arduino IDE.
 For more details of the functionality of the board, please read the [Datasheet](https://github.com/Fattoresaimon/I2CEncoderV2/blob/master/EncoderI2CV2_v1.6.pdf) 
 
 The I2C Encoder V2 is available on [Tindie!](https://www.tindie.com/products/Saimon/i2cencoder-v2-connect-multiple-encoder-on-i2c-bus/)
