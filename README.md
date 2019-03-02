@@ -16,7 +16,7 @@ Currently supported boards:
 
 #### Step 1:
 
-Download the [zip file](https://github.com/Fattoresaimon/ArduinoDuPPaLib/releases/download/v1.0.0/ArduinoDuPPaLib.zip) of the last release
+Download the [zip file](https://github.com/Fattoresaimon/ArduinoDuPPaLib/archive/v1.0.0.zip) of the last release
 
 #### Step2
 
