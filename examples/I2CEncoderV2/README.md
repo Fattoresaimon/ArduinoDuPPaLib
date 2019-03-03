@@ -53,7 +53,7 @@ This is used for initializing the encoder by writing the configuration register 
 The parameters can be concatenate in OR mode.
 The possible parameters are the following:
 
-|Parameter | Description |
+| Parameter | Description |
 | ---------- | ------------------------------------------------------ |
 | INT_DATA | The Threshold, counter step and counter value are used with integer numbers |
 | FLOAT_DATA | The Threshold, counter step and counter value are used with floating numbers |
@@ -104,22 +104,23 @@ The argument **i2cEncoderLibV2* obj**  is the pointer to the class that called t
 The argument **SourceInt e**  is the source event that generates the interrupt.
 
 Possible events:
+
 | Event   | Description   |
-|:-----------:|:-------------:|
-|BUTTON_RELEASE| Encoder push button is released |
-|BUTTON_PUSH| Encoder push button is pushed |
-|BUTTON_DOUBLE_PUSH| Encoder push button is double pushed |
-|ENCODER_INCREMENT| The counter value is incremented |
-|ENCODER_DECREMENT| The counter value is decremented |
-|ENCODER_MAX| The counter value reach the maximum threshold |
-|ENCODER_MIN| The counter value reach the minimum threshold |
-|GP1_POSITIVE| GP1 configured as input, rising edge |
-|GP1_NEGATIVE| GP1 configured as input, falling edge |
-|GP2_POSITIVE| GP2 configured as input, rising edge  |
-|GP2_NEGATIVE| GP2 configured as input, falling edge  |
-|GP3_POSITIVE| GP3 configured as input, rising edge  |
-|GP3_NEGATIVE| GP3 configured as input, falling edge  |
-|FADE| Fade process terminated |
+|:-----------:|:----------------------------------:|
+| BUTTON_RELEASE | Encoder push button is released |
+| BUTTON_PUSH | Encoder push button is pushed |
+| BUTTON_DOUBLE_PUSH | Encoder push button is double pushed |
+| ENCODER_INCREMENT | The counter value is incremented |
+| ENCODER_DECREMENT | The counter value is decremented |
+| ENCODER_MAX | The counter value reach the maximum threshold |
+| ENCODER_MIN | The counter value reach the minimum threshold |
+| GP1_POSITIVE | GP1 configured as input, rising edge |
+| GP1_NEGATIVE | GP1 configured as input, falling edge |
+| GP2_POSITIVE | GP2 configured as input, rising edge  |
+| GP2_NEGATIVE | GP2 configured as input, falling edge  |
+| GP3_POSITIVE | GP3 configured as input, rising edge  |
+| GP3_NEGATIVE | GP3 configured as input, falling edge  |
+| FADE | Fade process terminated |
 
 ###### Examples:
 ```C++
