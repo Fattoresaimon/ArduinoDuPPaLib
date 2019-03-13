@@ -136,26 +136,6 @@ enum GP_PARAMETER {
 };
 
 
-/* Interrupt source for the callback. Use with attachInterrupt */
-enum SourceInt {
-  BUTTON_RELEASE,
-  BUTTON_PUSH,
-  BUTTON_DOUBLE_PUSH,
-  ENCODER_INCREMENT,
-  ENCODER_DECREMENT,
-  ENCODER_MAX,
-  ENCODER_MIN,
-  GP1_POSITIVE,
-  GP1_NEGATIVE,
-  GP2_POSITIVE,
-  GP2_NEGATIVE,
-  GP3_POSITIVE,
-  GP3_NEGATIVE,
-  FADE,
-  SOURCE_INT_NUMB,
-};
-
-
 union Data_v {
   float fval;
   int32_t val;
@@ -165,9 +145,27 @@ union Data_v {
 class i2cEncoderLibV2
 {
   public:
-
+	
     uint8_t id = 0x00;
-    typedef void (*InterruptFunction) (i2cEncoderLibV2* , SourceInt);
+    typedef void (*InterruptFunction) (i2cEncoderLibV2*);
+	
+	/* Event */
+	InterruptFunction onButtonRelease = NULL;
+	InterruptFunction onButtonPush = NULL;
+	InterruptFunction onButtonDoublePush = NULL;
+	InterruptFunction onIncrement = NULL;
+	InterruptFunction onDecrement = NULL;
+	InterruptFunction onChange = NULL;
+	InterruptFunction onMax = NULL;
+	InterruptFunction onMin = NULL;	
+	InterruptFunction onMinMax = NULL;
+	InterruptFunction onGP1Rise = NULL;
+	InterruptFunction onGP1Fall = NULL;
+	InterruptFunction onGP2Rise = NULL;
+	InterruptFunction onGP2Fall = NULL;
+	InterruptFunction onGP3Rise = NULL;
+	InterruptFunction onGP3Fall = NULL;	
+	InterruptFunction onFadeProcess = NULL;
 
     /** Configuration function **/
     i2cEncoderLibV2(uint8_t add);
@@ -175,8 +173,6 @@ class i2cEncoderLibV2
     void reset(void);
     
     /** Configuration of callback **/
-    void attachInterrupt(InterruptFunction function, SourceInt event );
-    void deattachInterrupt(SourceInt event );
     void autoconfigInterrupt(void);
 
     /**    Read functions   **/
@@ -275,15 +271,13 @@ class i2cEncoderLibV2
 
   private:
   
-    InterruptFunction Events[SOURCE_INT_NUMB] = {NULL};
-
     uint8_t _add = 0x00;
     uint8_t _stat = 0x00;
     uint8_t _stat2 = 0x00;
     uint8_t _gconf = 0x00;
     union Data_v _tem_data;
 
-    void eventcaller(SourceInt event);
+    void eventCaller(InterruptFunction *event);
     uint8_t readEncoderByte(uint8_t reg);
     int16_t readEncoderInt(uint8_t reg);
     int32_t readEncoderLong(uint8_t reg);

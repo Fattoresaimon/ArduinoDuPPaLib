@@ -19,7 +19,7 @@
   + -> 3.3V
   SDA -> D2
   SCL -> D1
-  INT -> D0
+  INT -> D3
 */
 
 
@@ -40,7 +40,7 @@ int8_t min_val[4] = { -3, 0, 3, -11}; /* array where is store the min value of e
 bool insert = false;  /* if it's false is the item value selection, when it's true is the item selection */
 
 
-void encoder_rotated(i2cEncoderLibV2* obj, SourceInt e) {
+void encoder_rotated(i2cEncoderLibV2* obj) {
   if (insert == false) {
     m_pos = obj->readCounterByte();  /* change the item */
     Serial.println(m_pos);
@@ -50,7 +50,7 @@ void encoder_rotated(i2cEncoderLibV2* obj, SourceInt e) {
   }
 }
 
-void encoder_pushed(i2cEncoderLibV2* obj, SourceInt e) {
+void encoder_click(i2cEncoderLibV2* obj) {
   insert = true;
 
   obj->writeCounter((int32_t)val[m_pos]); /* Reset the counter value */
@@ -58,10 +58,10 @@ void encoder_pushed(i2cEncoderLibV2* obj, SourceInt e) {
   obj->writeMin((int32_t)min_val[m_pos]); /* Set the minimum threshold */
   obj->writeStep((int32_t)1); /* Set the step to 1*/
   obj->writeRGBCode(0x0000FF);
-  obj->attachInterrupt(encoder_Double_pushed, BUTTON_DOUBLE_PUSH); // Enable the double push interrupt
+  obj->onButtonDoublePush = encoder_Double_push; // Enable the double push interrupt
 }
 
-void encoder_Double_pushed(i2cEncoderLibV2* obj, SourceInt e) {
+void encoder_Double_push(i2cEncoderLibV2* obj) {
   insert = false;
   obj->writeCounter((int32_t)0); /* Reset the counter value */
   obj->writeMax((int32_t)3); /* Set the maximum threshold*/
@@ -70,7 +70,7 @@ void encoder_Double_pushed(i2cEncoderLibV2* obj, SourceInt e) {
   obj->writeRGBCode(0x00ff00);
 
   obj->writeEEPROM(EEPROM_START_ADD + m_pos, (uint8_t)val[m_pos]);
-  obj->deattachInterrupt(BUTTON_DOUBLE_PUSH);  // Disable the double push interrupt
+  obj->onButtonDoublePush = NULL; // Disable the double push interrupt
 
 }
 
@@ -109,10 +109,11 @@ void setup(void)
   Encoder.writeFadeRGB(1); /*Set fade to 1ms step */
   Encoder.writeRGBCode(0x00ff00); /* Turn ON the green LED */
 
-  Encoder.attachInterrupt(encoder_rotated, ENCODER_INCREMENT);
-  Encoder.attachInterrupt(encoder_rotated, ENCODER_DECREMENT);
-  Encoder.attachInterrupt(encoder_pushed, BUTTON_RELEASE);
-  Encoder.attachInterrupt(encoder_Double_pushed, BUTTON_DOUBLE_PUSH);
+  // Definition of the events
+  Encoder.onChange = encoder_rotated;
+  Encoder.onButtonPush = encoder_click;
+  Encoder.onButtonDoublePush = encoder_Double_push;
+  /* Enable the I2C Encoder V2 interrupts according to the previus attached callback */
   Encoder.autoconfigInterrupt();
 
 
@@ -137,7 +138,7 @@ void setup(void)
 
 
 void loop() {
- //Nothin in the loop,
+  //Nothin in the loop,
 }
 
 

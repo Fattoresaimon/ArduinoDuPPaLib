@@ -35,7 +35,7 @@ i2cEncoderLibV2 encoder[2] = { i2cEncoderLibV2(0x30), i2cEncoderLibV2(0x34)};
 ```
 Declaration of an array of the two encoders with the address 0x30 and 0x34.
 
-###Public variable
+## Parameters
 
 Each class has also a public variable called **id** that is used for setting a custom id to each class.
 
@@ -45,12 +45,78 @@ encoder.id=1
 ```
 The **id** can be useful when you declare an array of i2cEncoderLibV2 calss. The **id** can be used as a index in the loops.
 
+## Callback Configuration
+
+This library support the callback functionality.
+There is the possibility to link a function to a specific interrupt of the I2C Encoder V2, in this way the function is automatically called when the I2C Encoder V2 generates an interrupts.
+
+A callback function must be declared as the following:
+
+```C++
+void NAME_OF_THE_FUNCTION(i2cEncoderLibV2* obj)
+```
+
+The argument **i2cEncoderLibV2* obj**  is the pointer to the class that called the method.
+
+There are 16 possible events:
+
+| Event   | Description   |
+|:-----------:|:----------------------------------:|
+| onButtonRelease | Encoder push button is released |
+| onButtonPush | Encoder push button is pushed |
+| onButtonDoublePush | Encoder push button is double pushed |
+| onIncrement | The counter value is incremented |
+| onDecrement | The counter value is decremented |
+| onChange | The counter value is incremented or decremented |
+| onMax | The counter value reach the maximum threshold |
+| onMin | The counter value reach the minimum threshold |
+| onMinMax | The counter value reach the maximum or minimum threshold |
+| onGP1Rise | GP1 configured as input, rising edge |
+| onGP1Fall | GP1 configured as input, falling edge |
+| onGP2Rise | GP2 configured as input, rising edge  |
+| onGP2Fall | GP2 configured as input, falling edge  |
+| onGP3Rise | GP3 configured as input, rising edge  |
+| onGP3Fall | GP3 configured as input, falling edge  |
+| onFadeProcess | Fade process terminated |
+
+
+
+###### Examples:
+
+```C++
+i2cEncoderLibV2 Encoder(0x61); // Class declaration
+
+...
+
+// Simple callback that ist's called when the encoder is rotated
+void encoder_change(i2cEncoderLibV2* obj) {
+  Serial.println( obj->readCounterByte()); //Print on the terminal the counter value.
+}
+
+...
+
+Encoder.onChange = encoder_change; //Attach the event to the callback function.
+
+
+}
+
+```
+
+
+
+If you need to remove the link with a callback, you just need to define:
+```C++
+Encoder.onChange=NULL;
+```
+
+
+
 ## Methods
 
 ### Initialization
 #### void begin( uint8_t conf)
 This is used for initializing the encoder by writing the configuration register of the encoder.
-The parameters can be concatenate in OR mode.
+The parameters can be concatenated in OR mode.
 The possible parameters are the following:
 
 | Parameter | Description |
@@ -88,67 +154,7 @@ encoder.begin(INT_DATA | WRAP_DISABLE | DIRE_LEFT | IPUP_ENABLE | RMOD_X1 | STD_
 Reset of the board. 
 In this command there is 10ms delay in order to make the board correctly restart.
 
-### Callback Configuration
 
-#####  void attachInterrupt(InterruptFunction function, SourceInt event )
-This method is used to attach a callback to a specific interrupt event of the I2C Encoder V2.
-The parameter **function** is the function that is called when the **event** occurs.
-
-The  callback must be declared as the follow:
-
-```C++
-void NAME_OF_THE_FUNCTION(i2cEncoderLibV2* obj, SourceInt e)
-```
-
-The argument **i2cEncoderLibV2* obj**  is the pointer to the class that called the method.
-The argument **SourceInt e**  is the source event that generates the interrupt.
-
-Possible events:
-
-| Event   | Description   |
-|:-----------:|:----------------------------------:|
-| BUTTON_RELEASE | Encoder push button is released |
-| BUTTON_PUSH | Encoder push button is pushed |
-| BUTTON_DOUBLE_PUSH | Encoder push button is double pushed |
-| ENCODER_INCREMENT | The counter value is incremented |
-| ENCODER_DECREMENT | The counter value is decremented |
-| ENCODER_MAX | The counter value reach the maximum threshold |
-| ENCODER_MIN | The counter value reach the minimum threshold |
-| GP1_POSITIVE | GP1 configured as input, rising edge |
-| GP1_NEGATIVE | GP1 configured as input, falling edge |
-| GP2_POSITIVE | GP2 configured as input, rising edge  |
-| GP2_NEGATIVE | GP2 configured as input, falling edge  |
-| GP3_POSITIVE | GP3 configured as input, rising edge  |
-| GP3_NEGATIVE | GP3 configured as input, falling edge  |
-| FADE | Fade process terminated |
-
-###### Examples:
-```C++
-Encoder.attachInterrupt(encoder_rotated, ENCODER_INCREMENT);  //The function encoder_rotated will be called when the event ENCODER_INCREMENT occurs.
-
-....
-
-void encoder_rotated(i2cEncoderLibV2* obj, SourceInt e) {
-     Serial.println(obj->readCounterByte()); // print the counter value of that encoder 
-}
-
-```
-
-#####  void deattachInterrupt(SourceInt event )
-This methos remove the attached function of the specific event
-
-#####  void autoconfigInterrupt(void)
-This method auto configure the **INTCONF** register according to the attached callback.
-For the propres use, must be called after calling last **attachInterrupt**
-```C++
-Encoder.attachInterrupt(encoder_rotated, ENCODER_INCREMENT);
-Encoder.attachInterrupt(encoder_rotated, ENCODER_DECREMENT);
-Encoder.attachInterrupt(encoder_pushed, BUTTON_RELEASE);
-Encoder.attachInterrupt(encoder_Double_pushed, BUTTON_DOUBLE_PUSH);
-Encoder.autoconfigInterrupt(); // only the above interrupts are enabled
-}
-
-```
 
 ### Configuration
 
@@ -182,8 +188,6 @@ The interrupt configurations are used only when the pin is configured as digital
 encoder.writeGP1conf(GP_AN | GP_PULL_DI | GP_INT_DI);  //Configure the GP1 as analog input with the pull-up and the interrupt disable 
 ```
 
-
-
 ##### void writeInterruptConfig(uint8_t interrupt)
 
 This method  is used for enabling or disabling the interrupt source selectively. When an interrupt event occurs, the INT pin goes low and the event is stored in the status register.
@@ -199,12 +203,27 @@ This method  is used for enabling or disabling the interrupt source selectively.
 | RMIN  | Minimum threshold is reached  |
 | INT2  | An event on the interrupt 2 register occurs |
 
+#####  void autoconfigInterrupt(void)
+This method auto configures the **INTCONF** register according to the attached callback.
+**For the proper use, must be called after the definition of the last event property.**
 
+```C++
+ Encoder.onIncrement = encoder_increment;
+ Encoder.onDecrement = encoder_decrement;
+ Encoder.onMax = encoder_max;
+ Encoder.onMin = encoder_min;
+ Encoder.onButtonPush = encoder_push;
+ Encoder.onButtonRelease = encoder_released;
+ Encoder.onButtonDoublePush = encoder_double_push;
+ /* Enable the I2C Encoder V2 interrupts according to the previus attached callback */
+ Encoder.autoconfigInterrupt(); 
+
+```
 
 ##### void writeAntibouncingPeriod(uint8_t bounc)
 
 This method is used for writing the Anti-bouncing period **ANTBOUNC**.
-The I2C encoder V2 will multiplie this value x10.
+The I2C encoder V2 will multiplies this value by 10 (value x10).
 
 ###### Examples:
 
@@ -215,8 +234,8 @@ encoder.writeAntibouncingPeriod(20);  //Set an anti-bouncing of 200ms
 
 ##### void writeDoublePushPeriod(uint8_t dperiod)
 
-This method is used for setting the window period  **DPPERIOD** of the double push of the rotary encoder switch. It the value is 0 the double push option is disabled.
-The I2C encoder V2 will multiplie this value x10.
+This method is used for setting the window period **DPPERIOD** of the double push of the rotary encoder switch. When the value is 0, the double push option is disabled.
+The I2C encoder V2 will multiplies this value by 10 (value x10).
 
 ###### Examples:
 

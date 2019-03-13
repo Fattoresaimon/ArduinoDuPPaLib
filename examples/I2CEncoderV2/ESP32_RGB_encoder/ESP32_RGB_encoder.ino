@@ -21,8 +21,8 @@ const int IntPin = 23; /* Definition of the interrupt pin, change according to y
 i2cEncoderLibV2 Encoder(0b1100001); /* For make the address 0x61 only the jumpers A0, A5 and A6 are soldered.*/
 
 //Callback when the encoder is rotated
-void encoder_rotated(i2cEncoderLibV2* obj, SourceInt e) {
-  if (e == ENCODER_INCREMENT)
+void encoder_rotated(i2cEncoderLibV2* obj) {
+  if ( obj->readStatus( RINC))
     Serial.print("Increment: ");
   else
     Serial.print("Decrement: ");
@@ -32,15 +32,15 @@ void encoder_rotated(i2cEncoderLibV2* obj, SourceInt e) {
 
 
 //Callback when the encoder is pushed
-void encoder_pushed(i2cEncoderLibV2* obj, SourceInt e) {
+void encoder_click(i2cEncoderLibV2* obj) {
   Serial.println("Push: ");
   obj->writeRGBCode(0x0000FF);
 }
 
 
 //Callback when the encoder reach the max or min
-void encoder_thresholds(i2cEncoderLibV2* obj, SourceInt e) {
-  if (e == ENCODER_MAX)
+void encoder_thresholds(i2cEncoderLibV2* obj) {
+  if ( obj->readStatus( RMAX))
     Serial.println("Max!");
   else
     Serial.println("Min!");
@@ -50,7 +50,7 @@ void encoder_thresholds(i2cEncoderLibV2* obj, SourceInt e) {
 
 
 //Callback when the fading process finish and set the RGB led off
-void encoder_fade(i2cEncoderLibV2* obj, SourceInt e) {
+void encoder_fade(i2cEncoderLibV2* obj) {
   obj->writeRGBCode(0x000000);
 }
 
@@ -80,14 +80,13 @@ void setup(void)
   Encoder.writeMax((int32_t)10); /* Set the maximum threshold*/
   Encoder.writeMin((int32_t) - 10); /* Set the minimum threshold */
   Encoder.writeStep((int32_t)1); /* Set the step to 1*/
-  Encoder.attachInterrupt(encoder_rotated, ENCODER_INCREMENT);
-  /* attach the callback to the interrupt source */
-  Encoder.attachInterrupt(encoder_rotated, ENCODER_DECREMENT);
-  Encoder.attachInterrupt(encoder_pushed, BUTTON_RELEASE);
-  Encoder.attachInterrupt(encoder_thresholds, ENCODER_MAX);
-  Encoder.attachInterrupt(encoder_thresholds, ENCODER_MIN);
-  Encoder.attachInterrupt(encoder_fade, FADE);
-  /* Enable the interrupt according to the previus attached callback */
+  /* Configure the events */
+  Encoder.onChange = encoder_rotated;
+  Encoder.onButtonRelease = encoder_click;
+  Encoder.onMinMax = encoder_thresholds;
+  Encoder.onFadeProcess = encoder_fade;
+
+  /* Enable the I2C Encoder V2 interrupts according to the previus attached callback */
   Encoder.autoconfigInterrupt();
 
   Encoder.writeAntibouncingPeriod(20);  /* Set an anti-bouncing of 200ms */
@@ -100,16 +99,16 @@ void setup(void)
   Encoder.writeRGBCode(0x0000FF);
   delay(250);
   Encoder.writeRGBCode(0x000000);
-  
+
   Encoder.writeFadeRGB(3); //Fade enabled with 3ms step
 
 }
 
 void loop() {
 
- /* Waith when the INT pin goes low */
+  /* Waith when the INT pin goes low */
   if (digitalRead(IntPin) == LOW) {
-     /* Check the status of the encoder and call the callback */
+    /* Check the status of the encoder and call the callback */
     Encoder.updateStatus();
   }
 }

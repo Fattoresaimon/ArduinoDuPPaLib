@@ -20,7 +20,7 @@ i2cEncoderLibV2 Encoder(0x61); /* A0 is soldered */
 
 
 //Callback when the CVAL is incremented
-void encoder_increment(i2cEncoderLibV2* obj, SourceInt e) {
+void encoder_increment(i2cEncoderLibV2* obj) {
   Serial.print("Increment: ");
   Serial.println( Encoder.readCounterByte());
 }
@@ -28,7 +28,7 @@ void encoder_increment(i2cEncoderLibV2* obj, SourceInt e) {
 
 
 //Callback when the CVAL is decremented
-void encoder_decrement(i2cEncoderLibV2* obj, SourceInt e) {
+void encoder_decrement(i2cEncoderLibV2* obj) {
   Serial.print("Decrement: ");
   Serial.println( Encoder.readCounterByte());
 }
@@ -36,7 +36,7 @@ void encoder_decrement(i2cEncoderLibV2* obj, SourceInt e) {
 
 
 //Callback when CVAL reach MAX
-void encoder_max(i2cEncoderLibV2* obj, SourceInt e) {
+void encoder_max(i2cEncoderLibV2* obj) {
   Serial.print("Maximum threshold: ");
   Serial.println( Encoder.readCounterByte());
 }
@@ -45,7 +45,7 @@ void encoder_max(i2cEncoderLibV2* obj, SourceInt e) {
 
 
 //Callback when CVAL reach MIN
-void encoder_min(i2cEncoderLibV2* obj, SourceInt e) {
+void encoder_min(i2cEncoderLibV2* obj) {
   Serial.print("Minimum threshold: ");
   Serial.println( Encoder.readCounterByte());
 }
@@ -54,21 +54,21 @@ void encoder_min(i2cEncoderLibV2* obj, SourceInt e) {
 
 
 //Callback when the encoder is pushed
-void encoder_push(i2cEncoderLibV2* obj, SourceInt e) {
+void encoder_push(i2cEncoderLibV2* obj) {
   Serial.println("Encoder is pushed!");
 }
 
 
 
 //Callback when the encoder is released
-void encoder_released(i2cEncoderLibV2* obj, SourceInt e) {
+void encoder_released(i2cEncoderLibV2* obj) {
   Serial.println("Encoder is released");
 }
 
 
 
 //Callback when the encoder is double pushed
-void encoder_double_push(i2cEncoderLibV2* obj, SourceInt e) {
+void encoder_double_push(i2cEncoderLibV2* obj) {
   Serial.println("Encoder is double pushed!");
 }
 
@@ -100,15 +100,18 @@ void setup(void)
   Encoder.writeStep((int32_t)1); /* Set the step to 1*/
   Encoder.writeAntibouncingPeriod(20);  /* Set an anti-bouncing of 200ms */
   Encoder.writeDoublePushPeriod(50);  /*Set a period for the double push of 500ms */
-
-  Encoder.attachInterrupt(encoder_increment, ENCODER_INCREMENT);
-  Encoder.attachInterrupt(encoder_decrement, ENCODER_DECREMENT);
-  Encoder.attachInterrupt(encoder_max, ENCODER_MAX);
-  Encoder.attachInterrupt(encoder_min, ENCODER_MIN);
-  Encoder.attachInterrupt(encoder_push, BUTTON_PUSH);
-  Encoder.attachInterrupt(encoder_released, BUTTON_RELEASE);
-  Encoder.attachInterrupt(encoder_double_push, BUTTON_DOUBLE_PUSH);
-  Encoder.autoconfigInterrupt(); /* Enable all the attached interrupt */
+  
+  // Definition of the events
+  Encoder.onIncrement = encoder_increment;
+  Encoder.onDecrement = encoder_decrement;
+  Encoder.onMax = encoder_max;
+  Encoder.onMin = encoder_min;
+  Encoder.onButtonPush = encoder_push;
+  Encoder.onButtonRelease = encoder_released;
+  Encoder.onButtonDoublePush = encoder_double_push;
+  
+  /* Enable the I2C Encoder V2 interrupts according to the previus attached callback */
+  Encoder.autoconfigInterrupt(); 
 
 }
 

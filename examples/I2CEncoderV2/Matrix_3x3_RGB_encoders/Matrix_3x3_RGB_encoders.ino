@@ -34,8 +34,8 @@ i2cEncoderLibV2 RGBEncoder[ENCODER_N] = {
 
 uint8_t encoder_status, i;
 
-void encoder_rotated(i2cEncoderLibV2* obj, SourceInt e) {
-  if (e == ENCODER_INCREMENT)
+void encoder_rotated(i2cEncoderLibV2* obj) {
+  if ( obj->readStatus( RINC))
     Serial.print("Increment ");
   else
     Serial.print("Decrement ");
@@ -45,14 +45,14 @@ void encoder_rotated(i2cEncoderLibV2* obj, SourceInt e) {
   obj->writeRGBCode(0x00FF00);
 }
 
-void encoder_pushed(i2cEncoderLibV2* obj, SourceInt e) {
+void encoder_click(i2cEncoderLibV2* obj) {
   Serial.print("Push: ");
   Serial.println(obj->id);
   obj->writeRGBCode(0x0000FF);
 }
 
-void encoder_thresholds(i2cEncoderLibV2* obj, SourceInt e) {
-  if (e == ENCODER_MAX)
+void encoder_thresholds(i2cEncoderLibV2* obj) {
+  if ( obj->readStatus( RMAX))
     Serial.print("Max: ");
   else
     Serial.print("Min: ");
@@ -60,7 +60,7 @@ void encoder_thresholds(i2cEncoderLibV2* obj, SourceInt e) {
   obj->writeRGBCode(0xFF0000);
 }
 
-void encoder_fade(i2cEncoderLibV2* obj, SourceInt e) {
+void encoder_fade(i2cEncoderLibV2* obj) {
   obj->writeRGBCode(0x000000);
 }
 
@@ -77,7 +77,7 @@ void setup(void)
 
 
   pinMode(IntPin, INPUT);
-  pinMode(LED_BUILTIN, OUTPUT);
+
   Serial.begin(115200);
   Serial.print("Encoder Test!!\n");
 
@@ -93,12 +93,14 @@ void setup(void)
     RGBEncoder[enc_cnt].writeFadeRGB(3); //Fade enabled with 3ms step
     RGBEncoder[enc_cnt].writeAntibouncingPeriod(25); //250ms of debouncing
     RGBEncoder[enc_cnt].writeDoublePushPeriod(0); //Set the double push period to 500ms
-    RGBEncoder[enc_cnt].attachInterrupt(encoder_rotated, ENCODER_INCREMENT);
-    RGBEncoder[enc_cnt].attachInterrupt(encoder_rotated, ENCODER_DECREMENT);
-    RGBEncoder[enc_cnt].attachInterrupt(encoder_pushed, BUTTON_RELEASE);
-    RGBEncoder[enc_cnt].attachInterrupt(encoder_thresholds, ENCODER_MAX);
-    RGBEncoder[enc_cnt].attachInterrupt(encoder_thresholds, ENCODER_MIN);
-    RGBEncoder[enc_cnt].attachInterrupt(encoder_fade, FADE);
+
+    /* Configure the events */
+    RGBEncoder[enc_cnt].onChange = encoder_rotated;
+    RGBEncoder[enc_cnt].onButtonRelease = encoder_click;
+    RGBEncoder[enc_cnt].onMinMax = encoder_thresholds;
+    RGBEncoder[enc_cnt].onFadeProcess = encoder_fade;
+    
+    /* Enable the I2C Encoder V2 interrupts according to the previus attached callback */
     RGBEncoder[enc_cnt].autoconfigInterrupt();
     RGBEncoder[enc_cnt].id = enc_cnt;
   }
