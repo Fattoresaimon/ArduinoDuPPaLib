@@ -241,7 +241,7 @@ The I2C encoder V2 will multiplies this value by 10 (value x10).
 
 ###### Examples:
 
-​```C++
+```C++
 encoder.writeAntibouncingPeriod(20);  //Set an anti-bouncing of 200ms 
 ```
 
@@ -263,7 +263,7 @@ encoder.writeDoublePushPeriod(50);  //Set a period for the double push of 500ms
 This method is used for setting the fade speed **FADERGB** of the RGB LED of the rotary encoder. It the value is 0, the fade option is disabled.
 ###### Examples:
 
-```C++
+​```C++
 encoder.writeFadeRGB(1);  //Fade enabled with 1ms step 
 ```
 
@@ -294,7 +294,7 @@ In case an event of the I2STATUS  register, the I2STATUS is automatically be rea
 
 
 
-##### bool readStatus(uint8_t s)
+##### bool readStatus(Int_Status s)
 
 Must be called after **updateStatus()**, this method is used for checking if some event occurs on the **ESTATUS** register.
 Return value is **true** in case of the event occured, otherwise is **false**
@@ -349,7 +349,7 @@ Return the status of the register **ESTATUS**
 
 
 
-##### bool readInt2(uint8_t s)
+##### bool readInt2(Int2_Status s)
 Must be called after **updateStatus()**, this method is used for checking if some event occurred on the secondary interrupt status **I2STATUS** register.
 Return value is **true** in case of the event occured, otherwise is **false**
 Possible parameters are:
@@ -403,7 +403,7 @@ Return the status of the register **I2STATUS**
 
 
 
-##### bool readFadeStatus(uint8_t s)
+##### bool readFadeStatus(Fade_Status s)
 
 When this function is called, it performs a I2C reading.
 This function return **true** when the fade running, otherwise return **false**
