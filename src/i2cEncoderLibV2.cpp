@@ -32,89 +32,9 @@ void i2cEncoderLibV2::reset(void) {
 	writeEncoder(REG_GCONF, (uint8_t) 0x80);
 	delay(10);
 }
-/*********************************** Read functions *************************************/
-
-/** Return the GP1 Configuration**/
-uint8_t i2cEncoderLibV2::readGP1conf(void) {
-	return (readEncoderByte(REG_GP1CONF));
-}
-
-/** Return the GP1 Configuration**/
-uint8_t i2cEncoderLibV2::readGP2conf(void) {
-	return (readEncoderByte(REG_GP2CONF));
-}
-
-/** Return the GP1 Configuration**/
-uint8_t i2cEncoderLibV2::readGP3conf(void) {
-	return (readEncoderByte(REG_GP3CONF));
-}
-
-/** Return the INT pin configuration**/
-uint8_t i2cEncoderLibV2::readInterruptConfig(void) {
-	return (readEncoderByte(REG_INTCONF));
-}
-
-/** Check if there is some attached callbacke and enable the corresponding interrupt **/
-void i2cEncoderLibV2::autoconfigInterrupt(void) {
-	uint8_t reg;
-
-	if (onButtonRelease != NULL)
-		reg |= PUSHR;
-
-	if (onButtonPush != NULL)
-		reg |= PUSHP;
-
-	if (onButtonDoublePush != NULL)
-		reg |= PUSHD;
-
-	if (onIncrement != NULL)
-		reg |= RINC;
-
-	if (onDecrement != NULL)
-		reg |= RDEC;
-
-	if (onChange != NULL) {
-		reg |= RINC;
-		reg |= RDEC;
-	}
-
-	if (onMax != NULL)
-		reg |= RMAX;
-
-	if (onMin != NULL)
-		reg |= RMIN;
-
-	if (onMinMax != NULL) {
-		reg |= RMAX;
-		reg |= RMIN;
-	}
-
-	if (onGP1Rise != NULL)
-		reg |= INT2;
-
-	if (onGP1Fall != NULL)
-		reg |= INT2;
-
-	if (onGP2Rise != NULL)
-		reg |= INT2;
-
-	if (onGP2Fall != NULL)
-		reg |= INT2;
-
-	if (onGP3Rise != NULL)
-		reg |= INT2;
-
-	if (onGP3Fall != NULL)
-		reg |= INT2;
-
-	if (onFadeProcess != NULL)
-		reg |= INT2;
-
-	writeEncoder(REG_INTCONF, (uint8_t) reg);
-}
 
 /** Call che attached callaback if it is defined. It's a prive function only **/
-void i2cEncoderLibV2::eventCaller(InterruptFunction *event) {
+void i2cEncoderLibV2::eventCaller(Callback *event) {
 	if (*event != NULL)
 		(*event)(this);
 }
@@ -155,7 +75,7 @@ bool i2cEncoderLibV2::updateStatus(void) {
 		eventCaller (&onMinMax);
 	}
 
-	if ((_stat & INT2) != 0) {
+	if ((_stat & INT_2) != 0) {
 		_stat2 = readEncoderByte(REG_I2STATUS);
 		if (_stat2 == 0) {
 			return true;
@@ -185,6 +105,28 @@ bool i2cEncoderLibV2::updateStatus(void) {
 	}
 
 	return true;
+}
+
+/*********************************** Read functions *************************************/
+
+/** Return the GP1 Configuration**/
+uint8_t i2cEncoderLibV2::readGP1conf(void) {
+	return (readEncoderByte(REG_GP1CONF));
+}
+
+/** Return the GP1 Configuration**/
+uint8_t i2cEncoderLibV2::readGP2conf(void) {
+	return (readEncoderByte(REG_GP2CONF));
+}
+
+/** Return the GP1 Configuration**/
+uint8_t i2cEncoderLibV2::readGP3conf(void) {
+	return (readEncoderByte(REG_GP3CONF));
+}
+
+/** Return the INT pin configuration**/
+uint8_t i2cEncoderLibV2::readInterruptConfig(void) {
+	return (readEncoderByte(REG_INTCONF));
 }
 
 /** Check if a particular status match, return true is match otherwise false. Before require updateStatus() **/
@@ -364,6 +306,65 @@ void i2cEncoderLibV2::writeGP3conf(uint8_t gp3) {
 /** Write the interrupt configuration **/
 void i2cEncoderLibV2::writeInterruptConfig(uint8_t interrupt) {
 	writeEncoder(REG_INTCONF, (uint8_t) interrupt);
+}
+
+/** Check if there is some attached callback and enable the corresponding interrupt **/
+void i2cEncoderLibV2::autoconfigInterrupt(void) {
+	uint8_t reg;
+
+	if (onButtonRelease != NULL)
+		reg |= PUSHR;
+
+	if (onButtonPush != NULL)
+		reg |= PUSHP;
+
+	if (onButtonDoublePush != NULL)
+		reg |= PUSHD;
+
+	if (onIncrement != NULL)
+		reg |= RINC;
+
+	if (onDecrement != NULL)
+		reg |= RDEC;
+
+	if (onChange != NULL) {
+		reg |= RINC;
+		reg |= RDEC;
+	}
+
+	if (onMax != NULL)
+		reg |= RMAX;
+
+	if (onMin != NULL)
+		reg |= RMIN;
+
+	if (onMinMax != NULL) {
+		reg |= RMAX;
+		reg |= RMIN;
+	}
+
+	if (onGP1Rise != NULL)
+		reg |= INT_2;
+
+	if (onGP1Fall != NULL)
+		reg |= INT_2;
+
+	if (onGP2Rise != NULL)
+		reg |= INT_2;
+
+	if (onGP2Fall != NULL)
+		reg |= INT_2;
+
+	if (onGP3Rise != NULL)
+		reg |= INT_2;
+
+	if (onGP3Fall != NULL)
+		reg |= INT_2;
+
+	if (onFadeProcess != NULL)
+		reg |= INT_2;
+
+	writeEncoder(REG_INTCONF, (uint8_t) reg);
 }
 
 /** Write the counter value **/

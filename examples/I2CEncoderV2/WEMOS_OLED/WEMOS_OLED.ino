@@ -19,7 +19,6 @@
   INT -> D3
 */
 
-
 const int IntPin = 0; /* Definition of the interrupt pin*/
 //Class initialization with the I2C addresses
 i2cEncoderLibV2 Encoder(0x61); /* For make the address 0x61 only the jumpers A0, A5 and A6 are soldered.*/
@@ -27,31 +26,36 @@ i2cEncoderLibV2 Encoder(0x61); /* For make the address 0x61 only the jumpers A0,
 #define OLED_RESET -1
 Adafruit_SSD1306 display(OLED_RESET);
 
-void setup(void)
-{
+void setup(void) {
   pinMode(IntPin, INPUT);
   /*
-      INT_DATA= The register are considered integer.
-      WRAP_DISABLE= The WRAP option is disabled
-      DIRE_LEFT= Encoder left direction increase the value
-      IPUP_ENABLE= INT pin have the pull-up enabled.
-      RMOD_X1= Encoder configured as X1.
-      RGB_ENCODER= type of encoder is RGB, change to STD_ENCODER in case you are using a normal rotary encoder.
+    INT_DATA= The register are considered integer.
+    WRAP_DISABLE= The WRAP option is disabled
+    DIRE_LEFT= Encoder left direction increase the value
+    IPUP_ENABLE= INT pin have the pull-up enabled.
+    RMOD_X1= Encoder configured as X1.
+    RGB_ENCODER= type of encoder is RGB, change to STD_ENCODER in case you are using a normal rotary encoder.
   */
   Wire.begin();
   Encoder.reset(); /* Reset the I2C encoder V2 and wait 100ms */
-  
-  Encoder.begin(INT_DATA | WRAP_DISABLE | DIRE_LEFT | IPUP_ENABLE | RMOD_X1 | RGB_ENCODER);
-  //  Encoder.begin(INT_DATA | WRAP_DISABLE | DIRE_LEFT | IPUP_ENABLE | RMOD_X1 | STD_ENCODER); // try also this!
-  //  Encoder.begin(INT_DATA | WRAP_ENABLE | DIRE_LEFT | IPUP_ENABLE | RMOD_X1 | RGB_ENCODER);  // try also this!
 
-  Encoder.writeCounter((int32_t)0); /* Reset the counter value */
-  Encoder.writeMax((int32_t)10); /* Set the maximum threshold*/
+  Encoder.begin(
+    i2cEncoderLibV2::INT_DATA | i2cEncoderLibV2::WRAP_DISABLE
+    | i2cEncoderLibV2::DIRE_LEFT | i2cEncoderLibV2::IPUP_ENABLE
+    | i2cEncoderLibV2::RMOD_X1 | i2cEncoderLibV2::RGB_ENCODER);
+  //  Encoder.begin(i2cEncoderLibV2::INT_DATA | i2cEncoderLibV2::WRAP_DISABLE | i2cEncoderLibV2::DIRE_LEFT | i2cEncoderLibV2::PUP_ENABLE | i2cEncoderLibV2::RMOD_X1 | i2cEncoderLibV2::STD_ENCODER); // try also this!
+  //  Encoder.begin(i2cEncoderLibV2::INT_DATA | i2cEncoderLibV2::WRAP_ENABLE | i2cEncoderLibV2::DIRE_LEFT | i2cEncoderLibV2::IPUP_ENABLE | i2cEncoderLibV2::RMOD_X1 | i2cEncoderLibV2::RGB_ENCODER);  // try also this!
+
+  Encoder.writeCounter((int32_t) 0); /* Reset the counter value */
+  Encoder.writeMax((int32_t) 10); /* Set the maximum threshold*/
   Encoder.writeMin((int32_t) - 10); /* Set the minimum threshold */
-  Encoder.writeStep((int32_t)1); /* Set the step to 1*/
-  Encoder.writeInterruptConfig(INT2 | RMIN | RMAX | RDEC | RINC | PUSHR ); /* Enable all the interrupt */
-  Encoder.writeAntibouncingPeriod(20);  /* Set an anti-bouncing of 300ms */
-  Encoder.writeDoublePushPeriod(0);  /*Set a period for the double push of 500ms */
+  Encoder.writeStep((int32_t) 1); /* Set the step to 1*/
+  Encoder.writeInterruptConfig(
+    i2cEncoderLibV2::INT_2 | i2cEncoderLibV2::RMIN
+    | i2cEncoderLibV2::RMAX | i2cEncoderLibV2::RDEC
+    | i2cEncoderLibV2::RINC | i2cEncoderLibV2::PUSHR); /* Enable all the interrupt */
+  Encoder.writeAntibouncingPeriod(20); /* Set an anti-bouncing of 300ms */
+  Encoder.writeDoublePushPeriod(0); /*Set a period for the double push of 500ms */
 
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
 
@@ -67,14 +71,14 @@ void setup(void)
 void loop() {
   uint8_t enc_cnt;
   if (digitalRead(IntPin) == LOW) {
-    if ( Encoder.updateStatus()) {
+    if (Encoder.updateStatus()) {
 
       display.clearDisplay();
 
-      if ( Encoder.readStatus(RINC)) {
+      if (Encoder.readStatus(i2cEncoderLibV2::RINC)) {
         display.setCursor(0, 0);
         display.setTextSize(3);
-        display.print( Encoder.readCounterByte());
+        display.print(Encoder.readCounterByte());
         display.setCursor(0, 25);
         display.setTextSize(1);
         display.print("Increment");
@@ -85,10 +89,10 @@ void loop() {
         /* Write here your code */
 
       }
-      if ( Encoder.readStatus(RDEC)) {
+      if (Encoder.readStatus(i2cEncoderLibV2::RDEC)) {
         display.setCursor(0, 0);
         display.setTextSize(3);
-        display.print( Encoder.readCounterByte());
+        display.print(Encoder.readCounterByte());
         display.setCursor(0, 25);
         display.setTextSize(1);
         display.print("Decrement");
@@ -100,10 +104,10 @@ void loop() {
 
       }
 
-      if ( Encoder.readStatus(RMAX)) {
+      if (Encoder.readStatus(i2cEncoderLibV2::RMAX)) {
         display.setCursor(0, 0);
         display.setTextSize(3);
-        display.println( Encoder.readCounterByte());
+        display.println(Encoder.readCounterByte());
         display.setCursor(0, 35);
         display.setTextSize(1);
         display.print("Maximum");
@@ -111,24 +115,23 @@ void loop() {
 
       }
 
-      if ( Encoder.readStatus(RMIN)) {
+      if (Encoder.readStatus(i2cEncoderLibV2::RMIN)) {
         display.setCursor(0, 0);
         display.setTextSize(3);
-        display.print( Encoder.readCounterByte());
+        display.print(Encoder.readCounterByte());
         display.setCursor(0, 35);
         display.setTextSize(1);
         display.print("Minimum");
-
 
         /* Write here your code */
 
       }
 
-      if ( Encoder.readStatus(PUSHR)) {
-        
+      if (Encoder.readStatus(i2cEncoderLibV2::PUSHR)) {
+
         display.setCursor(0, 0);
         display.setTextSize(3);
-        display.print( Encoder.readCounterByte());
+        display.print(Encoder.readCounterByte());
         display.setCursor(0, 25);
         display.setTextSize(1);
         display.print("Button pressed!");

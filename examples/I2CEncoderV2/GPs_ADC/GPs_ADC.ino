@@ -41,15 +41,15 @@ void setup(void)
 
   //Configure the Standard Encoder
   STDEncoder.reset();
-  STDEncoder.begin(INT_DATA | WRAP_DISABLE | DIRE_LEFT | IPUP_ENABLE | RMOD_X1 | STD_ENCODER);
-  STDEncoder.writeGP1conf(GP_AN | GP_PULL_EN | GP_INT_DI);  // Configure the GP pins in analog mode
-  STDEncoder.writeGP2conf(GP_AN | GP_PULL_EN | GP_INT_DI); // Configure the GP pins in analog mode
-  STDEncoder.writeGP3conf(GP_AN | GP_PULL_EN | GP_INT_DI); // Configure the GP pins in analog mode
+  STDEncoder.begin(i2cEncoderLibV2::INT_DATA | i2cEncoderLibV2::WRAP_DISABLE | i2cEncoderLibV2::DIRE_LEFT | i2cEncoderLibV2::IPUP_ENABLE | i2cEncoderLibV2::RMOD_X1 | i2cEncoderLibV2::STD_ENCODER);
+  STDEncoder.writeGP1conf(i2cEncoderLibV2::GP_AN | i2cEncoderLibV2::GP_PULL_EN | i2cEncoderLibV2::GP_INT_DI);  // Configure the GP pins in analog mode
+  STDEncoder.writeGP2conf(i2cEncoderLibV2::GP_AN | i2cEncoderLibV2::GP_PULL_EN | i2cEncoderLibV2::GP_INT_DI); // Configure the GP pins in analog mode
+  STDEncoder.writeGP3conf(i2cEncoderLibV2::GP_AN | i2cEncoderLibV2::GP_PULL_EN | i2cEncoderLibV2::GP_INT_DI); // Configure the GP pins in analog mode
   STDEncoder.writeCounter((int32_t) 0);
   STDEncoder.writeMax((int32_t) 10);
   STDEncoder.writeMin((int32_t) 0);
   STDEncoder.writeStep((int32_t) 1);
-  STDEncoder.writeInterruptConfig(INT2 | RINC | RDEC | RMAX | RMIN); //Enable all the interrupts
+  STDEncoder.writeInterruptConfig(i2cEncoderLibV2::INT_2 | i2cEncoderLibV2::RINC | i2cEncoderLibV2::RDEC | i2cEncoderLibV2::RMAX | i2cEncoderLibV2::RMIN); //Enable all the interrupts
   STDEncoder.writeAntibouncingPeriod(20);  /* Set an anti-bouncing of 200ms */
   STDEncoder.updateStatus();
 

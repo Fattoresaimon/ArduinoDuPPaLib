@@ -21,271 +21,255 @@
 #include <WProgram.h>
 #endif
 
-/*Encoder register definition*/
-enum I2C_Register {
-  REG_GCONF   =  0x00,
-  REG_GP1CONF  = 0x01,
-  REG_GP2CONF   = 0x02,
-  REG_GP3CONF  = 0x03,
-  REG_INTCONF  = 0x04,
-  REG_ESTATUS  = 0x05,
-  REG_I2STATUS = 0x06,
-  REG_FSTATUS  = 0x07,
-  REG_CVALB4  = 0x08,
-  REG_CVALB3  = 0x09,
-  REG_CVALB2  = 0x0A,
-  REG_CVALB1  = 0x0B,
-  REG_CMAXB4  = 0x0C,
-  REG_CMAXB3  = 0x0D,
-  REG_CMAXB2  = 0x0E,
-  REG_CMAXB1  = 0x0F,
-  REG_CMINB4  = 0x10,
-  REG_CMINB3  = 0x11,
-  REG_CMINB2  = 0x12,
-  REG_CMINB1  = 0x13,
-  REG_ISTEPB4 = 0x14,
-  REG_ISTEPB3 = 0x15,
-  REG_ISTEPB2 = 0x16,
-  REG_ISTEPB1 = 0x17,
-  REG_RLED    = 0x18,
-  REG_GLED = 0x19,
-  REG_BLED = 0x1A,
-  REG_GP1REG = 0x1B,
-  REG_GP2REG = 0x1C,
-  REG_GP3REG = 0x1D,
-  REG_ANTBOUNC = 0x1E,
-  REG_DPPERIOD = 0x1F,
-  REG_FADERGB  = 0x20,
-  REG_FADEGP = 0x21,
-  REG_EEPROMS  = 0x80,
-};
+class i2cEncoderLibV2 {
+public:
 
-/* Encoder configuration bit. Use with GCONF */
-enum GCONF_PARAMETER {
-  FLOAT_DATA  = 0x01,
-  INT_DATA  = 0x00,
+	/*Encoder register definition*/
+	enum I2C_Register {
+		REG_GCONF = 0x00,
+		REG_GP1CONF = 0x01,
+		REG_GP2CONF = 0x02,
+		REG_GP3CONF = 0x03,
+		REG_INTCONF = 0x04,
+		REG_ESTATUS = 0x05,
+		REG_I2STATUS = 0x06,
+		REG_FSTATUS = 0x07,
+		REG_CVALB4 = 0x08,
+		REG_CVALB3 = 0x09,
+		REG_CVALB2 = 0x0A,
+		REG_CVALB1 = 0x0B,
+		REG_CMAXB4 = 0x0C,
+		REG_CMAXB3 = 0x0D,
+		REG_CMAXB2 = 0x0E,
+		REG_CMAXB1 = 0x0F,
+		REG_CMINB4 = 0x10,
+		REG_CMINB3 = 0x11,
+		REG_CMINB2 = 0x12,
+		REG_CMINB1 = 0x13,
+		REG_ISTEPB4 = 0x14,
+		REG_ISTEPB3 = 0x15,
+		REG_ISTEPB2 = 0x16,
+		REG_ISTEPB1 = 0x17,
+		REG_RLED = 0x18,
+		REG_GLED = 0x19,
+		REG_BLED = 0x1A,
+		REG_GP1REG = 0x1B,
+		REG_GP2REG = 0x1C,
+		REG_GP3REG = 0x1D,
+		REG_ANTBOUNC = 0x1E,
+		REG_DPPERIOD = 0x1F,
+		REG_FADERGB = 0x20,
+		REG_FADEGP = 0x21,
+		REG_EEPROMS = 0x80,
+	};
 
-  WRAP_ENABLE = 0x02,
-  WRAP_DISABLE = 0x00,
+	/* Encoder configuration bit. Use with GCONF */
+	enum GCONF_PARAMETER {
+		FLOAT_DATA = 0x01,
+		INT_DATA = 0x00,
+		WRAP_ENABLE = 0x02,
+		WRAP_DISABLE = 0x00,
+		DIRE_LEFT = 0x04,
+		DIRE_RIGHT = 0x00,
+		IPUP_DISABLE = 0x08,
+		IPUP_ENABLE = 0x00,
+		RMOD_X2 = 0x10,
+		RMOD_X1 = 0x00,
+		RGB_ENCODER = 0x20,
+		STD_ENCODER = 0x00,
+		EEPROM_BANK1 = 0x40,
+		EEPROM_BANK2 = 0x00,
+		RESET = 0x80,
+	};
 
-  DIRE_LEFT = 0x04,
-  DIRE_RIGHT  = 0x00,
+	/* Encoder status bits and setting. Use with: INTCONF for set and with ESTATUS for read the bits  */
+	enum Int_Status {
+		PUSHR = 0x01,
+		PUSHP = 0x02,
+		PUSHD = 0x04,
+		RINC = 0x08,
+		RDEC = 0x10,
+		RMAX = 0x20,
+		RMIN = 0x40,
+		INT_2 = 0x80,
 
-  IPUP_DISABLE =  0x08,
-  IPUP_ENABLE = 0x00,
+	};
 
-  RMOD_X2 = 0x10,
-  RMOD_X1 = 0x00,
+	/* Encoder Int2 bits. Use to read the bits of I2STATUS  */
+	typedef enum {
+		GP1_POS = 0x01,
+		GP1_NEG = 0x02,
+		GP2_POS = 0x04,
+		GP2_NEG = 0x08,
+		GP3_POS = 0x10,
+		GP3_NEG = 0x20,
+		FADE_INT = 0x40,
+	} Int2_Status;
 
-  RGB_ENCODER = 0x20,
-  STD_ENCODER = 0x00,
+	/* Encoder Fade status bits. Use to read the bits of FSTATUS  */
+	typedef enum {
+		FADE_R = 0x01,
+		FADE_G = 0x02,
+		FADE_B = 0x04,
+		FADES_GP1 = 0x08,
+		FADES_GP2 = 0x10,
+		FADES_GP3 = 0x20,
+	} Fade_Status;
 
-  EEPROM_BANK1 =  0x40,
-  EEPROM_BANK2 =  0x00,
-  
-  RESET =  0x80,
-};
+	/* GPIO Configuration. Use with GP1CONF,GP2CONF,GP3CONF */
+	enum GP_PARAMETER {
+		GP_PWM = 0x00,
+		GP_OUT = 0x01,
+		GP_AN = 0x02,
+		GP_IN = 0x03,
+		GP_PULL_EN = 0x04,
+		GP_PULL_DI = 0x00,
+		GP_INT_DI = 0x00,
+		GP_INT_PE = 0x08,
+		GP_INT_NE = 0x10,
+		GP_INT_BE = 0x18,
+	};
 
-/* Encoder status bits and setting. Use with: INTCONF for set and with ESTATUS for read the bits  */
-enum Int_Status {
-  PUSHR = 0x01,
-  PUSHP = 0x02,
-  PUSHD = 0x04,
-  RINC  = 0x08,
-  RDEC  = 0x10,
-  RMAX  = 0x20,
-  RMIN  = 0x40,
-  INT2  = 0x80,
-};
+	union Data_v {
+		float fval;
+		int32_t val;
+		uint8_t bval[4];
+	};
 
-/* Encoder Int2 bits. Use to read the bits of I2STATUS  */
-enum Int2_Status {
-  GP1_POS  = 0x01,
-  GP1_NEG  = 0x02,
-  GP2_POS  = 0x04,
-  GP2_NEG  = 0x08,
-  GP3_POS  = 0x10,
-  GP3_NEG  = 0x20,
-  FADE_INT = 0x40,
-};
+	uint8_t id = 0x00;
+	typedef void (*Callback)(i2cEncoderLibV2*);
 
-/* Encoder Fade status bits. Use to read the bits of FSTATUS  */
-enum Fade_Status {
-  FADE_R = 0x01,
-  FADE_G = 0x02,
-  FADE_B = 0x04,
-  FADES_GP1 = 0x08,
-  FADES_GP2 = 0x10,
-  FADES_GP3 = 0x20,
-};
-
-/* GPIO Configuration. Use with GP1CONF,GP2CONF,GP3CONF */
-enum GP_PARAMETER {
-  GP_PWM = 0x00,
-  GP_OUT = 0x01,
-  GP_AN = 0x02,
-  GP_IN = 0x03,
-
-  GP_PULL_EN = 0x04,
-  GP_PULL_DI = 0x00,
-
-  GP_INT_DI = 0x00,
-  GP_INT_PE = 0x08,
-  GP_INT_NE = 0x10,
-  GP_INT_BE = 0x18,
-};
-
-
-union Data_v {
-  float fval;
-  int32_t val;
-  uint8_t bval[4];
-};
-
-class i2cEncoderLibV2
-{
-  public:
-	
-    uint8_t id = 0x00;
-    typedef void (*InterruptFunction) (i2cEncoderLibV2*);
-	
 	/* Event */
-	InterruptFunction onButtonRelease = NULL;
-	InterruptFunction onButtonPush = NULL;
-	InterruptFunction onButtonDoublePush = NULL;
-	InterruptFunction onIncrement = NULL;
-	InterruptFunction onDecrement = NULL;
-	InterruptFunction onChange = NULL;
-	InterruptFunction onMax = NULL;
-	InterruptFunction onMin = NULL;	
-	InterruptFunction onMinMax = NULL;
-	InterruptFunction onGP1Rise = NULL;
-	InterruptFunction onGP1Fall = NULL;
-	InterruptFunction onGP2Rise = NULL;
-	InterruptFunction onGP2Fall = NULL;
-	InterruptFunction onGP3Rise = NULL;
-	InterruptFunction onGP3Fall = NULL;	
-	InterruptFunction onFadeProcess = NULL;
+	Callback onButtonRelease = NULL;
+	Callback onButtonPush = NULL;
+	Callback onButtonDoublePush = NULL;
+	Callback onIncrement = NULL;
+	Callback onDecrement = NULL;
+	Callback onChange = NULL;
+	Callback onMax = NULL;
+	Callback onMin = NULL;
+	Callback onMinMax = NULL;
+	Callback onGP1Rise = NULL;
+	Callback onGP1Fall = NULL;
+	Callback onGP2Rise = NULL;
+	Callback onGP2Fall = NULL;
+	Callback onGP3Rise = NULL;
+	Callback onGP3Fall = NULL;
+	Callback onFadeProcess = NULL;
 
-    /** Configuration function **/
-    i2cEncoderLibV2(uint8_t add);
-	void begin( uint8_t conf);
-    void reset(void);
-    
-    /** Configuration of callback **/
-    void autoconfigInterrupt(void);
+	/** Configuration methods **/
+	i2cEncoderLibV2(uint8_t add);
+	void begin(uint8_t conf);
+	void reset(void);
+	void autoconfigInterrupt(void);
 
-    /**    Read functions   **/
-    uint8_t readGP1conf(void);
-    uint8_t readGP2conf(void);
-    uint8_t readGP3conf(void);
-    uint8_t readInterruptConfig(void);
+	/**    Read functions   **/
+	uint8_t readGP1conf(void);
+	uint8_t readGP2conf(void);
+	uint8_t readGP3conf(void);
+	uint8_t readInterruptConfig(void);
 
-    /** Status function **/
-    bool updateStatus(void);
-    bool readStatus(Int_Status s);
-    uint8_t readStatus(void);
+	/** Status function **/
+	bool updateStatus(void);
+	bool readStatus(Int_Status s);
+	uint8_t readStatus(void);
 
-    bool readInt2(Int2_Status s);
-    uint8_t readInt2(void);
+	bool readInt2(Int2_Status s);
+	uint8_t readInt2(void);
 
-    bool readFadeStatus(Fade_Status s);
-    uint8_t readFadeStatus(void);
+	bool readFadeStatus(Fade_Status s);
+	uint8_t readFadeStatus(void);
 
-    /** Encoder functions **/
-    float readCounterFloat(void);
-    int32_t readCounterLong(void);
-    int16_t readCounterInt(void);
-    int8_t readCounterByte(void);
+	/** Encoder functions **/
+	float readCounterFloat(void);
+	int32_t readCounterLong(void);
+	int16_t readCounterInt(void);
+	int8_t readCounterByte(void);
 
-    int32_t readMax(void);
-    float readMaxFloat(void);
+	int32_t readMax(void);
+	float readMaxFloat(void);
 
-    int32_t readMin(void);
-    float readMinFloat(void);
+	int32_t readMin(void);
+	float readMinFloat(void);
 
-    int32_t readStep(void);
-    float readStepFloat(void);
+	int32_t readStep(void);
+	float readStepFloat(void);
 
-    /** RGB LED Functions **/
-    uint8_t readLEDR(void);
-    uint8_t readLEDG(void);
-    uint8_t readLEDB(void);
+	/** RGB LED Functions **/
+	uint8_t readLEDR(void);
+	uint8_t readLEDG(void);
+	uint8_t readLEDB(void);
 
-    /** GP LED Functions **/
-    uint8_t readGP1(void);
-    uint8_t readGP2(void);
-    uint8_t readGP3(void);
+	/** GP LED Functions **/
+	uint8_t readGP1(void);
+	uint8_t readGP2(void);
+	uint8_t readGP3(void);
 
-    /** Timing registers **/
-    uint8_t readAntibouncingPeriod(void);
-    uint8_t readDoublePushPeriod(void);
-    uint8_t readFadeRGB(void);
-    uint8_t readFadeGP(void);
+	/** Timing registers **/
+	uint8_t readAntibouncingPeriod(void);
+	uint8_t readDoublePushPeriod(void);
+	uint8_t readFadeRGB(void);
+	uint8_t readFadeGP(void);
 
-    /** EEPROM register **/
-    uint8_t readEEPROM(uint8_t add);
+	/** EEPROM register **/
+	uint8_t readEEPROM(uint8_t add);
 
+	/******    Write functions   ********/
+	void writeGP1conf(uint8_t gp1);
+	void writeGP2conf(uint8_t gp2);
+	void writeGP3conf(uint8_t gp3);
+	void writeInterruptConfig(uint8_t interrupt);
 
+	/** Encoder functions **/
+	void writeCounter(int32_t counter);
+	void writeCounter(float counter);
 
+	void writeMax(int32_t max);
+	void writeMax(float max);
 
-    /******    Write functions   ********/
-    void writeGP1conf(uint8_t gp1);
-    void writeGP2conf(uint8_t gp2);
-    void writeGP3conf(uint8_t gp3);
-    void writeInterruptConfig(uint8_t interrupt);
+	void writeMin(int32_t min);
+	void writeMin(float min);
 
-    /** Encoder functions **/
-    void writeCounter(int32_t counter);
-    void writeCounter(float counter);
+	void writeStep(int32_t step);
+	void writeStep(float step);
 
-    void writeMax(int32_t max);
-    void writeMax(float max);
+	/** RGB LED Functions **/
+	void writeLEDR(uint8_t rled);
+	void writeLEDG(uint8_t gled);
+	void writeLEDB(uint8_t bled);
+	void writeRGBCode(uint32_t rgb);
 
-    void writeMin(int32_t min);
-    void writeMin(float min);
+	/** GP LED Functions **/
+	void writeGP1(uint8_t gp1);
+	void writeGP2(uint8_t gp2);
+	void writeGP3(uint8_t gp3);
 
-    void writeStep(int32_t step);
-    void writeStep(float step);
+	/** Timing registers **/
+	void writeAntibouncingPeriod(uint8_t bounc);
+	void writeDoublePushPeriod(uint8_t dperiod);
+	void writeFadeRGB(uint8_t fade);
+	void writeFadeGP(uint8_t fade);
 
-    /** RGB LED Functions **/
-    void writeLEDR(uint8_t rled);
-    void writeLEDG(uint8_t gled);
-    void writeLEDB(uint8_t bled);
-    void writeRGBCode(uint32_t rgb);
+	/** EEPROM register **/
+	void writeEEPROM(uint8_t add, uint8_t data);
 
-    /** GP LED Functions **/
-    void writeGP1(uint8_t gp1);
-    void writeGP2(uint8_t gp2);
-    void writeGP3(uint8_t gp3);
+private:
 
-    /** Timing registers **/
-    void writeAntibouncingPeriod(uint8_t bounc);
-    void writeDoublePushPeriod(uint8_t dperiod);
-    void writeFadeRGB(uint8_t fade);
-    void writeFadeGP(uint8_t fade);
+	uint8_t _add = 0x00;
+	uint8_t _stat = 0x00;
+	uint8_t _stat2 = 0x00;
+	uint8_t _gconf = 0x00;
+	union Data_v _tem_data;
 
-    /** EEPROM register **/
-    void writeEEPROM(uint8_t add, uint8_t data);
-
-
-  private:
-  
-    uint8_t _add = 0x00;
-    uint8_t _stat = 0x00;
-    uint8_t _stat2 = 0x00;
-    uint8_t _gconf = 0x00;
-    union Data_v _tem_data;
-
-    void eventCaller(InterruptFunction *event);
-    uint8_t readEncoderByte(uint8_t reg);
-    int16_t readEncoderInt(uint8_t reg);
-    int32_t readEncoderLong(uint8_t reg);
-    float readEncoderFloat(uint8_t reg);
-    void writeEncoder(uint8_t reg, uint8_t data);
-    void writeEncoder(uint8_t reg, int32_t data);
-    void writeEncoder(uint8_t reg, float data);
-    void writeEncoder24bit(uint8_t reg, uint32_t data);
+	void eventCaller(Callback *event);
+	uint8_t readEncoderByte(uint8_t reg);
+	int16_t readEncoderInt(uint8_t reg);
+	int32_t readEncoderLong(uint8_t reg);
+	float readEncoderFloat(uint8_t reg);
+	void writeEncoder(uint8_t reg, uint8_t data);
+	void writeEncoder(uint8_t reg, int32_t data);
+	void writeEncoder(uint8_t reg, float data);
+	void writeEncoder24bit(uint8_t reg, uint32_t data);
 
 };
 
