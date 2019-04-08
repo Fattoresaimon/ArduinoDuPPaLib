@@ -61,7 +61,7 @@ The argument **i2cEncoderLibV2* obj**  is the pointer to the class that called t
 There are 16 possible events:
 
 | Event   | Description   |
-|:-----------:|:----------------------------------:|
+|:-----------:|:----------------------------------|
 | onButtonRelease | Encoder push button is released |
 | onButtonPush | Encoder push button is pushed |
 | onButtonDoublePush | Encoder push button is double pushed |
@@ -79,9 +79,7 @@ There are 16 possible events:
 | onGP3Fall | GP3 configured as input, falling edge  |
 | onFadeProcess | Fade process terminated |
 
-
-
-###### Examples:
+#### Examples:
 
 ```C++
 i2cEncoderLibV2 Encoder(0x61); // Class declaration
@@ -97,24 +95,17 @@ void encoder_change(i2cEncoderLibV2* obj) {
 
 Encoder.onChange = encoder_change; //Attach the event to the callback function.
 
-
 }
 
 ```
-
-
 
 If you need to remove the link with a callback, you just need to define:
 ```C++
 Encoder.onChange=NULL;
 ```
 
-
-
-## Methods
-
-### Initialization
-#### void begin( uint8_t conf)
+## Initialization
+### void begin( uint8_t conf)
 This is used for initializing the encoder by writing the configuration register of the encoder.
 The parameters can be concatenated in OR mode.
 The possible parameters are the following:
@@ -144,7 +135,7 @@ The possible parameters are the following:
 | | |
 | RESET | Reset the board |
 
-###### Examples:
+#### Examples:
 
 ```C++
 encoder.begin(i2cEncoderLibV2::INT_DATA | i2cEncoderLibV2::WRAP_DISABLE | i2cEncoderLibV2::DIRE_LEFT | i2cEncoderLibV2::IPUP_ENABLE | i2cEncoderLibV2::RMOD_X1 | i2cEncoderLibV2::STD_ENCODER);
@@ -152,26 +143,27 @@ encoder.begin(i2cEncoderLibV2::INT_DATA | i2cEncoderLibV2::WRAP_DISABLE | i2cEnc
 
 Please remember to add the class name **i2cEncoderLibV2::** before the parameter!
 
-#### void reset(void)
+### void reset(void)
 
 Reset of the board. 
 In this command there is 10ms delay in order to make the board correctly restart.
 
 
 
-### Configuration
+## Configuration
 
-#### GPx pins configuration
+
+### void writeGP1conf(uint8_t gp1)
+### void writeGP2conf(uint8_t gp2)
+### void writeGP3conf(uint8_t gp3)
+
 
 This 3 functions are used to configure the GP pins. The parameters are the same for all of the 3 GP pins.
 The interrupt configurations are used only when the pin is configured as digital input.
 
-##### void writeGP1conf(uint8_t gp1)
-##### void writeGP2conf(uint8_t gp2)
-##### void writeGP3conf(uint8_t gp3)
 
 | Parameter   | Description   |
-|:-----------:|:-------------:|
+|:-----------:|:-------------|
 |GP_PWM| Se the GP pin as PWM output|
 |GP_OUT| Se the GP pin as digital output|
 |GP_AN| Se the GP pin as analog input|
@@ -185,7 +177,7 @@ The interrupt configurations are used only when the pin is configured as digital
 |GP_INT_NE|  Enable the interrupt at the negative edge|
 |GP_INT_BE|  Enable the interrupt at the positive and negative edge|
 
-###### Examples:
+#### Examples:
 
 ```C++
 encoder.writeGP1conf(i2cEncoderLibV2::GP_AN | i2cEncoderLibV2::GP_PULL_DI | i2cEncoderLibV2::GP_INT_DI);  //Configure the GP1 as analog input with the pull-up and the interrupt disable 
@@ -193,7 +185,7 @@ encoder.writeGP1conf(i2cEncoderLibV2::GP_AN | i2cEncoderLibV2::GP_PULL_DI | i2cE
 
 Please remember to add the class name **i2cEncoderLibV2::** before the parameter!
 
-##### void writeInterruptConfig(uint8_t interrupt)
+### void writeInterruptConfig(uint8_t interrupt)
 
 This method  is used for enabling or disabling the interrupt source selectively. When an interrupt event occurs, the INT pin goes low and the event is stored in the status register.
 
@@ -208,7 +200,7 @@ This method  is used for enabling or disabling the interrupt source selectively.
 | RMIN  | Minimum threshold is reached  |
 | INT_2  | An event on the interrupt 2 register occurs |
 
-###### Examples:
+#### Examples:
 
 ```C++
  Encoder.writeInterruptConfig(i2cEncoderLibV2::INT_2 | i2cEncoderLibV2::RMIN | i2cEncoderLibV2::RMAX | i2cEncoderLibV2::RDEC | i2cEncoderLibV2::RINC | i2cEncoderLibV2::PUSHR); 
@@ -216,7 +208,7 @@ This method  is used for enabling or disabling the interrupt source selectively.
 
 Please remember to add the class name **i2cEncoderLibV2::** before the parameter!
 
-#####  void autoconfigInterrupt(void)
+###  void autoconfigInterrupt(void)
 
 This method auto configures the **INTCONF** register according to the attached callback.
 **For the proper use, must be called after the definition of the last event property.**
@@ -234,57 +226,55 @@ This method auto configures the **INTCONF** register according to the attached c
 
 ```
 
-##### void writeAntibouncingPeriod(uint8_t bounc)
+### void writeAntibouncingPeriod(uint8_t bounc)
 
 This method is used for writing the Anti-bouncing period **ANTBOUNC**.
 The I2C encoder V2 will multiplies this value by 10 (value x10).
 
-###### Examples:
+#### Examples:
 
 ```C++
 encoder.writeAntibouncingPeriod(20);  //Set an anti-bouncing of 200ms 
 ```
 
-
-##### void writeDoublePushPeriod(uint8_t dperiod)
+### void writeDoublePushPeriod(uint8_t dperiod)
 
 This method is used for setting the window period **DPPERIOD** of the double push of the rotary encoder switch. When the value is 0, the double push option is disabled.
 The I2C encoder V2 will multiplies this value by 10 (value x10).
 
-###### Examples:
+#### Examples:
 
 ```C++
 encoder.writeDoublePushPeriod(50);  //Set a period for the double push of 500ms 
 ```
 
 
-##### void writeFadeRGB(uint8_t fade)
-
+### void writeFadeRGB(uint8_t fade)
 This method is used for setting the fade speed **FADERGB** of the RGB LED of the rotary encoder. It the value is 0, the fade option is disabled.
-###### Examples:
 
-​```C++
+#### Examples:
+
+```C++
 encoder.writeFadeRGB(1);  //Fade enabled with 1ms step 
 ```
 
-
-##### void writeFadeGP(uint8_t fade)
-
+### void writeFadeGP(uint8_t fade)
 This method is used for setting the fade speed **FADEGP** of the RGB LED of the rotary encoder. It the value is 0, the fade option is disabled.
-###### Examples:
+
+#### Examples:
 
 ```C++
   encoder.writeFadeGP(5);  //GP Fade enabled with 5ms step 
 ```
 
-### Status
+## Status
 
-##### bool updateStatus(void)
-Read from the encoder status register (reg:0x05) and save the value internally.
+### bool updateStatus(void)
+Read from the encoder status register **ESTATUS** and save the value internally.
 Return value is **true** in case of some event, otherwise is **false**
 In case an event of the I2STATUS  register, the I2STATUS is automatically be read.
 
-###### Examples:
+#### Examples:
 
 ```C++
   if ( Encoder.updateStatus() == true) {
@@ -292,10 +282,7 @@ In case an event of the I2STATUS  register, the I2STATUS is automatically be rea
   }
 ```
 
-
-
-##### bool readStatus(Int_Status s)
-
+### bool readStatus(Int_Status s)
 Must be called after **updateStatus()**, this method is used for checking if some event occurs on the **ESTATUS** register.
 Return value is **true** in case of the event occured, otherwise is **false**
 Possible parameters are:
@@ -311,7 +298,7 @@ Possible parameters are:
 | RMIN  | Minimum threshold is reached  |
 | INT2  | An event on the interrupt 2 register occurs |
 
-###### Example:
+#### Example:
 ```C++
  if ( Encoder.updateStatus() == true) {
       if ( Encoder.readStatus(i2cEncoderLibV2::RINC)) {
@@ -343,13 +330,12 @@ Possible parameters are:
 
 Please remember to add the class name **i2cEncoderLibV2::** before the parameter!
 
-##### uint8_t readStatus(void)
-
+### uint8_t readStatus(void)
 Return the status of the register **ESTATUS**
 
 
 
-##### bool readInt2(Int2_Status s)
+### bool readInt2(Int2_Status s)
 Must be called after **updateStatus()**, this method is used for checking if some event occurred on the secondary interrupt status **I2STATUS** register.
 Return value is **true** in case of the event occured, otherwise is **false**
 Possible parameters are:
@@ -364,7 +350,7 @@ Possible parameters are:
 | GP3_NEG  |Negative edge on the GP3 pin |
 | FADE_INT |Fade process finished   |
 
-###### Example:
+#### Example:
 ```C++
  if ( Encoder.updateStatus() == true) {
       if ( Encoder.readInt2(i2cEncoderLibV2::GP1_POS)) {
@@ -397,14 +383,11 @@ Possible parameters are:
 
 Please remember to add the class name **i2cEncoderLibV2::** before the parameter!
 
-##### uint8_t readInt2(void)
-
+### uint8_t readInt2(void)
 Return the status of the register **I2STATUS**
 
 
-
-##### bool readFadeStatus(Fade_Status s)
-
+### bool readFadeStatus(Fade_Status s)
 When this function is called, it performs a I2C reading.
 This function return **true** when the fade running, otherwise return **false**
 
@@ -419,251 +402,164 @@ This function return **true** when the fade running, otherwise return **false**
 
 Please remember to add the class name **i2cEncoderLibV2::** before the parameter!
 
-##### uint8_t readFadeStatus(void)
-
+### uint8_t readFadeStatus(void)
 Return the value of the register **FSTATUS**.
 
 
+## Reading methods
 
-### Reading methods
-
-##### int32_t readCounterLong(void)
+### int32_t readCounterLong(void)
 Return the counter value in the format **int32_t**, by reading all the 4 bytes of the counter value registers.
 
-
-
-##### int16_t readCounterInt(void)
+### int16_t readCounterInt(void)
 Return the counter value in the format **int16_t**, by reading the 2 LSB  of the counter value registers.
 Useful when the counter register is between the values -32768 to 32767.
 
-
-
-##### int8_t readCounterByte(void)
+### int8_t readCounterByte(void)
 Return the counter value in the format **int8_t**, by reading the LSB byte of the counter value register.
 Useful when the counter register is between the values -128 to 127
 
-
-
-##### float readCounterFloat(void)
+### float readCounterFloat(void)
 Return the counter value in the format **float**, by reading all the 4 bytes of the counter value registers.
 For using this function you have to configure the board with the parameter **FLOAT_DATA**.
 
-
-
-##### int32_t readMax(void)
+### int32_t readMax(void)
 Return the maximum threshold in format **int32_t**, bye reading all the 4 bytes of the counter Max.
 
-
-
-##### float readMaxFloat(void)
+### float readMaxFloat(void)
 Return the maximum threshold in format **float**, bye reading all the 4 bytes of the counter Max.
 
-
-
-##### int32_t readMin(void)
+### int32_t readMin(void)
 Return the minimum threshold in format **int32_t**, by reading all the 4 byte of the counter Min.
 
-
-
-##### float readMinFloat(void)
+### float readMinFloat(void)
 Return the minimum  threshold in format **float**, bye reading all the 4 bytes of the counter Min.
 
-
-
-##### int32_t readStep(void)
+### int32_t readStep(void)
 Return the minimum threshold in format **int32_t**, by reading all the 4 bytes of the ISTEP registers.
 
-
-
-##### float readStepFloat(void)
+### float readStepFloat(void)
 Return the step value in format **float**, by reading all the 4 bytes of the ISTEP registers .
 
-
-
-##### uint8_t readLEDR(void)
+### uint8_t readLEDR(void)
 Return the value of the RLED register. 
 
-
-
-##### uint8_t readLEDG(void)
+### uint8_t readLEDG(void)
 Return the value of the GLED register. 
 
-
-
-##### uint8_t readLEDB(void)
+### uint8_t readLEDB(void)
 Return the value of the BLED register. 
 
-
-
-##### uint8_t readGP1(void)
+### uint8_t readGP1(void)
 Return the value of the GP1REG register. 
 If the **GP1** is configured as input, it's possible to read the logic status of the pin: *1* when the pin is high, otherwise *0*.
 If the **GP1** is configured as analog, it's possible to read the 8bit of the ADC.
 
-
-
-##### uint8_t readGP2(void)
+### uint8_t readGP2(void)
 Return the value of the GP2REG register. 
 If the **GP2** is configured as input, it's possbile to read the logic status of the pin: *1* when the pin is high, otherwise *0*.
 If the **GP2** is configured as analog, it's possible to read the 8bit of the ADC.
 
-
-
-##### uint8_t readGP3(void)
+### uint8_t readGP3(void)
 Return the value of the GP3REG register. 
 If the **GP3** is configured as input, it's possbile to read the logic status of the pin: *1* when the pin is high, otherwise *0*.
 If the **GP3** is configured as analog, it's possible to read the 8bit of the ADC. 
 
-
-
-##### uint8_t readAntibouncingPeriod(void)
+### uint8_t readAntibouncingPeriod(void)
 Return the value of the ANTBOUNC register. 
 
-
-
-##### uint8_t readDoublePushPeriod(void)
+### uint8_t readDoublePushPeriod(void)
 Return the value of the DPPERIOD register. 
 
-
-
-##### uint8_t readFadeRGB(void)
+### uint8_t readFadeRGB(void)
 Return the value of the FADERGB register. 
 
-
-
-##### uint8_t readFadeGP(void)
+### uint8_t readFadeGP(void)
 Return the value of the FADEGP register. 
 
-
-
-##### uint8_t readEEPROM(uint8_t add)
+### uint8_t readEEPROM(uint8_t add)
 Return the value of the EEPROM register. 
 This function automatically manage the setting of the first and second memory bank.
 
-
-
-##### uint8_t readEncoderByte(uint8_t reg)
+### uint8_t readEncoderByte(uint8_t reg)
 Read a generic register of the I2C Encoder V2.
 The input parameter is the address of the register.
 
-
-
-##### int16_t readEncoderInt(uint8_t reg)
+### int16_t readEncoderInt(uint8_t reg)
 Read a generic register of the I2C Encoder V2, in 16bit format.
 The input parameter is starting  address of the registers. 
 
-
-
-#####  int32_t readEncoderLong(uint8_t reg)
+###  int32_t readEncoderLong(uint8_t reg)
 Read a generic register of the I2C Encoder V2, in 32bit format.
 The input parameter is starting  address of the registers. 
 
 
+## Writing methods
 
-
-### Writing methods
-#####  void writeCounter(int32_t counter)
+###  void writeCounter(int32_t counter)
 Write the counter value register with a  **int32_t** number. All of the 4 bytes are wrote.
 
-
-
-#####  void writeCounter(float counter)
+###  void writeCounter(float counter)
 Write the counter value register with a  **float** number. All of the 4 bytes are wrote.
 
-
-
-#####  void writeMax(int32_t max)
+###  void writeMax(int32_t max)
 Write the Max register with a  **int32_t** number. All of the 4 bytes are wrote.
 
-
-
-#####  void writeMax(float max)
+###  void writeMax(float max)
 Write the Max register with a  **float** number. All of the 4 bytes are wrote.
 
-
-
-#####  void writeMin(int32_t min)
+###  void writeMin(int32_t min)
 Write the Min register with a  **int32_t** number. All of the 4 bytes are wrote.
 
-
-
-#####  void writeMin(float min)
+###  void writeMin(float min)
 Write the Min register with a  **float** number. All of the 4 bytes are wrote.
 
-
-
-#####  void writeStep(int32_t step)
+###  void writeStep(int32_t step)
 Write the increment step  with a  **int32_t** number. All of the 4 bytes are wrote.
 
-
-
-#####  void writeStep(float step)
+###  void writeStep(float step)
 Write the increment step with a  **float** number. All of the 4 bytes are wrote.
 
-
-
-##### void writeLEDR(uint8_t rled)
+### void writeLEDR(uint8_t rled)
 Write the PWM value of the RLED of the RGB encoder. When 0 means PWM at 0%, LED off while 0xFF means PWM at 100% and LED ON.
 
-
-
-##### void writeLEDG(uint8_t gled)
+### void writeLEDG(uint8_t gled)
 Write the PWM value of the GLED of the RGB encoder. When 0 means PWM at 0%, LED off while 0xFF means PWM at 100% and LED ON.
 
-
-
-##### void writeLEDB(uint8_t bled)
+### void writeLEDB(uint8_t bled)
 Write the PWM value of the BLED of the RGB encoder. When 0 means PWM at 0%, LED off while 0xFF means PWM at 100% and LED ON.
 
-
-
-##### void writeRGBCode(uint32_t rgb)
+### void writeRGBCode(uint32_t rgb)
 Write a 24bit RGB color in the format 0xRRGGBB.
 
-
-
-##### void writeGP1(uint8_t gp1)
+### void writeGP1(uint8_t gp1)
 Write the GP1REG register.
 If the GP1 is configure as PWM with this method it's possible to write the PWM value.
 If the GP1 is configure as output with this method it's possible to write the logic status: 1 for high, while 0 for low.
 
-
-
-##### void writeGP2(uint8_t gp2)
+### void writeGP2(uint8_t gp2)
 Write the GP2REG register.
 If the GP2 is configure as PWM with this method it's possible to write the PWM value.
 If the GP2 is configure as output with this method it's possible to write the logic status: 1 for high, while 0 for low.
 
+### void writeGP3(uint8_t gp3)
+Write the GP3REG register.
+If the GP3 is configure as PWM with this method it's possible to write the PWM value.
+If the GP3 is configure as output with this method it's possible to write the logic status: 1 for high, while 0 for low.
 
-
-##### void writeGP3(uint8_t gp3)
-Write the GP2REG register.
-If the GP2 is configure as PWM with this method it's possible to write the PWM value.
-If the GP2 is configure as output with this method it's possible to write the logic status: 1 for high, while 0 for low.
-
-
-
-##### void writeAntibouncingPeriod(uint8_t bounc)
+### void writeAntibouncingPeriod(uint8_t bounc)
 Write the ANTBOUNC register.
 
-
-
-##### void writeDoublePushPeriod(uint8_t dperiod)
+### void writeDoublePushPeriod(uint8_t dperiod)
 Write the DPPERIOD register.
 
-
-
-##### void writeFadeRGB(uint8_t fade)
+### void writeFadeRGB(uint8_t fade)
 Write the FADERGB register.
 
-
-
-##### void writeFadeGP(uint8_t fade)
+### void writeFadeGP(uint8_t fade)
 Write the FADEGP register.
 
-
-
-##### void writeEEPROM(uint8_t add, uint8_t data)
+### void writeEEPROM(uint8_t add, uint8_t data)
 Write the EEPROM memory.
 The input parameter *add* is the address. This method automatically change the first or the second bank.
 The input parameter *data* is the data taht will be written.
