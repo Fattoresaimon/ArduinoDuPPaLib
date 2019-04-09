@@ -4,7 +4,7 @@
 /*This is a basic example for using the I2C navkey V2
   Every time a button is pressed it's printed on the terminal.
   The double push is active, with a 300ms window
-  The encoder is set from -10 to +10
+  The encoder is set from 0.5 to 9.5 with step of 0.25
 
 
   Connections with Arduino UNO:
@@ -52,7 +52,7 @@ void CENTRAL_Button_Double(i2cNavKey* p) {
 }
 
 void Encoder_Rotate(i2cNavKey* p) {
-  Serial.println(p->readCounterInt());
+  Serial.println(p->readCounterFloat(),2);
 
 }
 void setup(void)
@@ -69,12 +69,12 @@ void setup(void)
   */
 
   navkey.reset();
-  navkey.begin(i2cNavKey::INT_DATA | i2cNavKey::WRAP_ENABLE | i2cNavKey::DIRE_RIGHT | i2cNavKey::IPUP_ENABLE);
+  navkey.begin(i2cNavKey::FLOAT_DATA | i2cNavKey::WRAP_ENABLE | i2cNavKey::DIRE_RIGHT | i2cNavKey::IPUP_ENABLE);
 
-  navkey.writeCounter((int32_t)0); /* Reset the counter value */
-  navkey.writeMax((int32_t)10); /* Set the maximum threshold*/
-  navkey.writeMin((int32_t)-10); /* Set the minimum threshold */
-  navkey.writeStep((int32_t)1); /* Set the step to 1*/
+  navkey.writeCounter((float)0); /* Reset the counter value */
+  navkey.writeMax((float)9.5); /* Set the maximum threshold*/
+  navkey.writeMin((float)0.5); /* Set the minimum threshold */
+  navkey.writeStep((float)0.25); /* Set the step to 1*/
 
   navkey.writeDoublePushPeriod(30);  /*Set a period for the double push of 300ms */
 
