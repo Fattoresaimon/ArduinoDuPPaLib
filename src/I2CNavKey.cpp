@@ -109,7 +109,7 @@ bool i2cNavKey::updateStatus(void) {
 		eventCaller (&onMinMax);
 	}
 	
-	if ((_stat & INT2) != 0) {
+	if ((_stat & INT_2) != 0) {
 		_stat2 = readNavKeyByte(REG_SSTATUS);
 	if (_stat2 == 0) {
 			return true;
@@ -395,25 +395,25 @@ void i2cNavKey::autoconfigInterrupt(void) {
 	}
 
 	if (onGP1Rise != NULL)
-		reg |= INT2;
+		reg |= INT_2;
 
 	if (onGP1Fall != NULL)
-		reg |= INT2;
+		reg |= INT_2;
 
 	if (onGP2Rise != NULL)
-		reg |= INT2;
+		reg |= INT_2;
 
 	if (onGP2Fall != NULL)
-		reg |= INT2;
+		reg |= INT_2;
 
 	if (onGP3Rise != NULL)
-		reg |= INT2;
+		reg |= INT_2;
 
 	if (onGP3Fall != NULL)
-		reg |= INT2;
+		reg |= INT_2;
 
 	if (onFadeProcess != NULL)
-		reg |= INT2;
+		reg |= INT_2;
 
 	writeInterruptConfig((uint16_t) reg);
 }

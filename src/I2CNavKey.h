@@ -98,7 +98,7 @@ public:
 		RDEC = 0x1000,
 		RMAX = 0x2000,
 		RMIN = 0x4000,
-		INT2 = 0x8000,
+		INT_2 = 0x8000,
 	};
 
 	/* NavKey Int2 bits. Use to read the bits of I2STATUS  */

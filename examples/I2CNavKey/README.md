@@ -203,7 +203,7 @@ This method  is used for enabling or disabling the interrupt source selectively.
 | RDEC  | Encoder is rotated in the decrement direction  |
 | RMAX  | Maximum threshold is reached  |
 | RMIN  | Minimum threshold is reached  |
-| INT2  | An event on the interrupt 2 register occurs |
+| INT_2  | An event on the interrupt 2 register occurs |
 
 ###  void autoconfigInterrupt(void)
 This method auto configures the **INTCONF** register according to the attached callback.
@@ -312,7 +312,7 @@ Possible parameters are:
 | RDEC  | Encoder is rotated in the decrement direction  |
 | RMAX  | Maximum threshold is reached  |
 | RMIN  | Minimum threshold is reached  |
-| INT2  | An event on the interrupt 2 register occurs |
+| INT_2  | An event on the interrupt 2 register occurs |
 
 #### Example:
 ```C++
