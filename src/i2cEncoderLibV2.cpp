@@ -1,7 +1,7 @@
 //
 //    FILE: i2cEncoderLibV2.h
-// VERSION: 0.1..
-// PURPOSE: Library for I2C Encoder V2 board with Arduino
+// VERSION: 1.0..
+// PURPOSE: Library for I2C Encoder V2.1 board with Arduino
 // LICENSE: GPL v3 (http://www.gnu.org/licenses/gpl.html)
 //
 // DATASHEET:
@@ -22,12 +22,18 @@ i2cEncoderLibV2::i2cEncoderLibV2(uint8_t add) {
 }
 
 /** Used for initialize the encoder **/
-void i2cEncoderLibV2::begin(uint8_t conf) {
+void i2cEncoderLibV2::begin(uint16_t conf) {
 
-	writeEncoder(REG_GCONF, (uint8_t) conf);
+	writeEncoder(REG_GCONF, (uint8_t) conf & 0xFF);
+	writeEncoder(REG_GCONF2, (uint8_t)(conf >> 8) & 0xFF);
 	_gconf = conf;
+	if ((conf & CLK_STRECH_ENABLE) == 0)
+		_clockstreach = 0;
+	else
+		_clockstreach = 1;
 }
 
+/** Reset the board **/
 void i2cEncoderLibV2::reset(void) {
 	writeEncoder(REG_GCONF, (uint8_t) 0x80);
 	delay(10);
@@ -270,6 +276,16 @@ uint8_t i2cEncoderLibV2::readFadeGP(void) {
 	return (readEncoderByte(REG_FADEGP));
 }
 
+/** Read the ID code **/
+uint8_t i2cEncoderLibV2::readIDCode(void) {
+	return (readEncoderByte(REG_IDCODE));
+}
+
+/** Read the Version code **/
+uint8_t i2cEncoderLibV2::readVersion(void) {
+	return (readEncoderByte(REG_VERSION));
+}
+
 /** Read the EEPROM memory**/
 uint8_t i2cEncoderLibV2::readEEPROM(uint8_t add) {
 	if (add <= 0x7f) {
@@ -462,6 +478,36 @@ void i2cEncoderLibV2::writeFadeGP(uint8_t fade) {
 	writeEncoder(REG_FADEGP, fade);
 }
 
+/** Write the Gamma value on RLED **/
+void i2cEncoderLibV2::writeGammaRLED(GAMMA_PARAMETER Gamma) {
+	writeEncoder(REG_GAMRLED, (uint8_t) Gamma);
+}
+
+/** Write the Gamma value on GLED **/
+void i2cEncoderLibV2::writeGammaGLED(GAMMA_PARAMETER Gamma) {
+	writeEncoder(REG_GAMGLED, (uint8_t) Gamma);
+}
+
+/** Write the Gamma value on BLED **/
+void i2cEncoderLibV2::writeGammaBLED(GAMMA_PARAMETER Gamma) {
+	writeEncoder(REG_GAMBLED, (uint8_t) Gamma);
+}
+
+/** Write the Gamma value on GP1 **/
+void i2cEncoderLibV2::writeGammaGP1(GAMMA_PARAMETER Gamma) {
+	writeEncoder(REG_GAMMAGP1, (uint8_t) Gamma);
+}
+
+/** Write the Gamma value on GP2 **/
+void i2cEncoderLibV2::writeGammaGP2(GAMMA_PARAMETER Gamma) {
+	writeEncoder(REG_GAMMAGP2, (uint8_t) Gamma);
+}
+
+/** Write the Gamma value on GP1 **/
+void i2cEncoderLibV2::writeGammaGP3(GAMMA_PARAMETER Gamma) {
+	writeEncoder(REG_GAMMAGP3, (uint8_t) Gamma);
+}
+
 /** Write the EEPROM memory**/
 void i2cEncoderLibV2::writeEEPROM(uint8_t add, uint8_t data) {
 
@@ -479,7 +525,8 @@ void i2cEncoderLibV2::writeEEPROM(uint8_t add, uint8_t data) {
 		writeEncoder(add, data);
 	}
 
-	delay(5);
+	if (_clockstreach == 0)
+		delay(5);
 }
 
 /*********************************** Private functions *************************************/

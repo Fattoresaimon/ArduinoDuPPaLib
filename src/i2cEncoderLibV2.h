@@ -60,26 +60,40 @@ public:
 		REG_DPPERIOD = 0x1F,
 		REG_FADERGB = 0x20,
 		REG_FADEGP = 0x21,
+        REG_GAMRLED = 0x27,
+		REG_GAMGLED = 0x28,
+		REG_GAMBLED = 0x29,        
+		REG_GAMMAGP1 = 0x2A,
+		REG_GAMMAGP2 = 0x2B,        
+		REG_GAMMAGP3 = 0x2C,        
+		REG_GCONF2 = 0x30,
+		REG_IDCODE = 0x70,
+		REG_VERSION = 0x71,          
 		REG_EEPROMS = 0x80,
-	};
+} I2C1_REGISTER;
+
 
 	/* Encoder configuration bit. Use with GCONF */
 	enum GCONF_PARAMETER {
-		FLOAT_DATA = 0x01,
-		INT_DATA = 0x00,
-		WRAP_ENABLE = 0x02,
-		WRAP_DISABLE = 0x00,
-		DIRE_LEFT = 0x04,
-		DIRE_RIGHT = 0x00,
-		IPUP_DISABLE = 0x08,
-		IPUP_ENABLE = 0x00,
-		RMOD_X2 = 0x10,
-		RMOD_X1 = 0x00,
-		RGB_ENCODER = 0x20,
-		STD_ENCODER = 0x00,
-		EEPROM_BANK1 = 0x40,
-		EEPROM_BANK2 = 0x00,
-		RESET = 0x80,
+		FLOAT_DATA = 0x0001,
+		INT_DATA = 0x0000,
+		WRAP_ENABLE = 0x0002,
+		WRAP_DISABLE = 0x0000,
+		DIRE_LEFT = 0x0004,
+		DIRE_RIGHT = 0x0000,
+		IPUP_DISABLE = 0x0008,
+		IPUP_ENABLE = 0x0000,
+		RMOD_X2 = 0x0010,
+		RMOD_X1 = 0x0000,
+		RGB_ENCODER = 0x0020,
+		STD_ENCODER = 0x0000,
+		EEPROM_BANK1 = 0x0040,
+		EEPROM_BANK2 = 0x0000,
+		RESET = 0x0080,
+		CLK_STRECH_ENABLE = 0x0100,
+		CLK_STRECH_DISABLE = 0x0000,
+		REL_MODE_ENABLE= 0x0200,
+		REL_MODE_DISABLE = 0x0000,
 	};
 
 	/* Encoder status bits and setting. Use with: INTCONF for set and with ESTATUS for read the bits  */
@@ -129,6 +143,18 @@ public:
 		GP_INT_NE = 0x10,
 		GP_INT_BE = 0x18,
 	};
+	
+	typedef enum {
+		GAMMA_OFF = 0,
+		GAMMA_1 = 1,
+		GAMMA_1_8 = 2,
+		GAMMA_2 = 3,
+		GAMMA_2_2 = 4,
+		GAMMA_2_4 = 5,
+		GAMMA_2_6 = 6,
+		GAMMA_2_8 = 7,
+
+	} GAMMA_PARAMETER;
 
 	union Data_v {
 		float fval;
@@ -159,7 +185,7 @@ public:
 
 	/** Configuration methods **/
 	i2cEncoderLibV2(uint8_t add);
-	void begin(uint8_t conf);
+	void begin(uint16_t conf);
 	void reset(void);
 	void autoconfigInterrupt(void);
 
@@ -211,6 +237,9 @@ public:
 	uint8_t readFadeRGB(void);
 	uint8_t readFadeGP(void);
 
+	uint8_t readIDCode(void);
+	uint8_t readVersion(void);
+
 	/** EEPROM register **/
 	uint8_t readEEPROM(uint8_t add);
 
@@ -250,11 +279,21 @@ public:
 	void writeFadeRGB(uint8_t fade);
 	void writeFadeGP(uint8_t fade);
 
+	/** Gamma register **/
+	void writeGammaRLED(GAMMA_PARAMETER Gamma);
+	void writeGammaGLED(GAMMA_PARAMETER Gamma);
+	void writeGammaBLED(GAMMA_PARAMETER Gamma);
+	void writeGammaGP1(GAMMA_PARAMETER Gamma);
+	void writeGammaGP2(GAMMA_PARAMETER Gamma);
+	void writeGammaGP3(GAMMA_PARAMETER Gamma);
+
+
 	/** EEPROM register **/
 	void writeEEPROM(uint8_t add, uint8_t data);
 
 private:
 
+	uint8_t _clockstreach; 
 	uint8_t _add = 0x00;
 	uint8_t _stat = 0x00;
 	uint8_t _stat2 = 0x00;
