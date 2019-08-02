@@ -162,7 +162,7 @@ public:
 		uint8_t bval[4];
 	};
 
-	uint8_t id = 0x00;
+	uint8_t id; // = 0x00;
 	typedef void (*Callback)(i2cEncoderLibV2*);
 
 	/* Event */
@@ -294,10 +294,10 @@ public:
 private:
 
 	uint8_t _clockstreach; 
-	uint8_t _add = 0x00;
-	uint8_t _stat = 0x00;
-	uint8_t _stat2 = 0x00;
-	uint8_t _gconf = 0x00;
+	uint8_t _add ; // = 0x00;
+	uint8_t _stat ; // = 0x00;
+	uint8_t _stat2 ; // = 0x00;
+	uint8_t _gconf ; // = 0x00;
 	union Data_v _tem_data;
 
 	void eventCaller(Callback *event);
