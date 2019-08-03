@@ -19,13 +19,22 @@
 /** Class costructor **/
 i2cEncoderLibV2::i2cEncoderLibV2(uint8_t add) {
 	_add = add;
+    // ensure defined values
+    _stat = 0x00;
+    _stat2 = 0x00;
+    _gconf = 0x00;
 }
 
 /** Used for initialize the encoder **/
 void i2cEncoderLibV2::begin(uint16_t conf) {
+    uint8_t temp;
 
-	writeEncoder(REG_GCONF, (uint8_t) conf & 0xFF);
-	writeEncoder(REG_GCONF2, (uint8_t)(conf >> 8) & 0xFF);
+    temp = (uint8_t) conf & 0xff;
+	writeEncoder(REG_GCONF, temp);
+
+    temp = (uint8_t) (conf >> 8) & 0xff;
+	writeEncoder(REG_GCONF, temp);
+
 	_gconf = conf;
 	if ((conf & CLK_STRECH_ENABLE) == 0)
 		_clockstreach = 0;
@@ -326,7 +335,7 @@ void i2cEncoderLibV2::writeInterruptConfig(uint8_t interrupt) {
 
 /** Check if there is some attached callback and enable the corresponding interrupt **/
 void i2cEncoderLibV2::autoconfigInterrupt(void) {
-	uint8_t reg;
+	uint8_t reg = 0;
 
 	if (onButtonRelease != NULL)
 		reg |= PUSHR;
