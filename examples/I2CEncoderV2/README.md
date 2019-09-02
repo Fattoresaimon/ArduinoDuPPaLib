@@ -105,7 +105,7 @@ Encoder.onChange=NULL;
 ```
 
 ## Initialization
-### void begin( uint8_t conf)
+### void begin( uint16_t conf)
 This is used for initializing the encoder by writing the configuration register of the encoder.
 The parameters can be concatenated in OR mode.
 The possible parameters are the following:
@@ -134,11 +134,18 @@ The possible parameters are the following:
 | EEPROM_BANK2 | Select the second EEPROM bank |
 | | |
 | RESET | Reset the board |
+| | |
+| CLK_STRECH_ENABLE | Enable the I2C clock streach (only v2.1) |
+| CLK_STRECH_DISABLE | Disable the I2C clock streach (only v2.1) |
+| | |
+| REL_MODE_ENABLE | Enable the CVAL relative mode (only v2.1)|
+| REL_MODE_DISABLE | Disable the CVAL relative mode (only v2.1) |
+| | |
 
 #### Examples:
 
 ```C++
-encoder.begin(i2cEncoderLibV2::INT_DATA | i2cEncoderLibV2::WRAP_DISABLE | i2cEncoderLibV2::DIRE_LEFT | i2cEncoderLibV2::IPUP_ENABLE | i2cEncoderLibV2::RMOD_X1 | i2cEncoderLibV2::STD_ENCODER);
+encoder.begin(i2cEncoderLibV2::INT_DATA | i2cEncoderLibV2::WRAP_DISABLE | i2cEncoderLibV2::DIRE_LEFT | i2cEncoderLibV2::IPUP_ENABLE | i2cEncoderLibV2::RMOD_X1 | i2cEncoderLibV2::STD_ENCODER | i2cEncoderLibV2::CLK_STRECH_ENABLE | i2cEncoderLibV2::REL_MODE_DISABLE  );
 ```
 
 Please remember to add the class name **i2cEncoderLibV2::** before the parameter!
@@ -477,21 +484,19 @@ Return the value of the FADERGB register.
 ### uint8_t readFadeGP(void)
 Return the value of the FADEGP register. 
 
+### uint8_t readIDCode(uint8_t add)
+Return the ID code of the I2C Encoder V2.1, that is 0x53
+Avaiable only on the V2.1
+
+### uint8_t readVersion(uint8_t add)
+Return the version of the board. 
+Avaiable only on the V2.1
+
 ### uint8_t readEEPROM(uint8_t add)
 Return the value of the EEPROM register. 
 This function automatically manage the setting of the first and second memory bank.
 
-### uint8_t readEncoderByte(uint8_t reg)
-Read a generic register of the I2C Encoder V2.
-The input parameter is the address of the register.
 
-### int16_t readEncoderInt(uint8_t reg)
-Read a generic register of the I2C Encoder V2, in 16bit format.
-The input parameter is starting  address of the registers. 
-
-###  int32_t readEncoderLong(uint8_t reg)
-Read a generic register of the I2C Encoder V2, in 32bit format.
-The input parameter is starting  address of the registers. 
 
 
 ## Writing methods
@@ -559,8 +564,37 @@ Write the FADERGB register.
 ### void writeFadeGP(uint8_t fade)
 Write the FADEGP register.
 
+### void writeGammaRLED(GAMMA_PARAMETER Gamma)
+### void writeGammaGLED(GAMMA_PARAMETER Gamma)
+### void writeGammaBLED(GAMMA_PARAMETER Gamma)
+### void writeGammaGP1(GAMMA_PARAMETER Gamma)
+### void writeGammaGP2(GAMMA_PARAMETER Gamma)
+### void writeGammaGP3(GAMMA_PARAMETER Gamma)
+
+This method is used to set a gamma correction for the RGB led of the encoder and for the GP pins.
+
+| Parameter   | Description   |
+|:-----------:|:-------------|
+| GAMMA_OFF   | Gamma correction is OFF |
+| GAMMA_1   | Gamma is 1, in thi case the PWM is lenear |
+| GAMMA_1_8   | Gamma is 1.8 |
+| GAMMA_2   | Gamma is 2 |
+| GAMMA_2_2   | Gamma is 2.2 |
+| GAMMA_2_4   | Gamma is 2.4 |
+| GAMMA_2_6 | Gamma is 2.6 |
+| GAMMA_2_8   | Gamma is 2.8 |
+
+#### Examples:
+
+```C++
+  Encoder.writeGammaRLED(i2cNavKey::GAMMA_1_8);
+  Encoder.writeGammaGLED(i2cNavKey::GAMMA_1_8);
+  Encoder.writeGammaBLED(i2cNavKey::GAMMA_1_8);
+```
+
 ### void writeEEPROM(uint8_t add, uint8_t data)
 Write the EEPROM memory.
 The input parameter *add* is the address. This method automatically change the first or the second bank.
 The input parameter *data* is the data taht will be written.
+If the I2C clock streach is disabled, a delay of 5ms is added.
 

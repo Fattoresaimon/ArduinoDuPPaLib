@@ -24,8 +24,8 @@ i2cEncoderLibV2::i2cEncoderLibV2(uint8_t add) {
 /** Used for initialize the encoder **/
 void i2cEncoderLibV2::begin(uint16_t conf) {
 
-	writeEncoder(REG_GCONF, (uint8_t) conf & 0xFF);
-	writeEncoder(REG_GCONF2, (uint8_t)(conf >> 8) & 0xFF);
+	writeEncoder(REG_GCONF, (uint8_t)( conf & 0xFF));
+	writeEncoder(REG_GCONF2, (uint8_t)((conf >> 8) & 0xFF));
 	_gconf = conf;
 	if ((conf & CLK_STRECH_ENABLE) == 0)
 		_clockstreach = 0;
