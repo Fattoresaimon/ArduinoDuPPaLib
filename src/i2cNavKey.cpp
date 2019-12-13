@@ -333,7 +333,7 @@ void i2cNavKey::writeInterruptConfig(uint16_t interrupt) {
 
 /** Check if there is some attached callback and enable the corresponding interrupt **/
 void i2cNavKey::autoconfigInterrupt(void) {
-	uint16_t reg;
+	uint16_t reg=0;
 
 	if (onArrowsPush != NULL)
 		reg = reg | UPP | DNP | RTP | LTP;
