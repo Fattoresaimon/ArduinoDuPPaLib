@@ -49,7 +49,7 @@ void NAME_OF_THE_FUNCTION(i2cNavKey* obj)
 
 The argument **i2cNavKey* obj**  is the pointer to the class that called the method.
 
-There are 16 possible events:
+There are 26 possible events:
 
 | Event   | Description   |
 |:-----------:|:----------------------------------|
@@ -113,7 +113,7 @@ navkey.onChange=NULL;
 ## Initialization
 
 ### void begin( uint8_t conf)
-This is used for initializing the I2CNavKey by writing the configuration register of the I2CNavKey .
+This is used for initializing the I2CNavKey by writing the configuration register.
 The parameters can be concatenated in OR mode.
 The possible parameters are the following:
 
@@ -128,8 +128,8 @@ The possible parameters are the following:
 | DIRE_LEFT | Rotate left side to increase the value counter |
 | DIRE_RIGHT | Rotate right side to increase the value counter |
 | | |
-| IPUP_DISABLE | Disable the internall pull-up on the INT pin |
-| IPUP_ENABLE | Enable the internall pull-up on the INT pin |
+| IPUP_DISABLE | Disable the internal pull-up on the INT pin |
+| IPUP_ENABLE | Enable the internal pull-up on the INT pin |
 | | |
 | CLK_STRECH_ENABLE | Enable the I2C clock stretch  |
 | CLK_STRECH_DISABLE | Disable the I2C clock stretch  |
@@ -160,10 +160,10 @@ The interrupt configurations are used only when the pin is configured as digital
 
 | Parameter   | Description   |
 |:-----------:|:-------------|
-|GP_PWM| Se the GP pin as PWM output|
-|GP_OUT| Se the GP pin as digital output|
-|GP_AN| Se the GP pin as analog input|
-|GP_IN| Se the GP pin as digital input output|
+|GP_PWM| Set the GP pin as PWM output|
+|GP_OUT| Set the GP pin as digital output|
+|GP_AN| Set the GP pin as analog input|
+|GP_IN| Set the GP pin as digital input output|
 |||
 |GP_PULL_EN| Enable the internal pull-up of the pin|
 |GP_PULL_DI| Disable the internal pull-up of the pin|
@@ -184,7 +184,7 @@ The interrupt configurations are used only when the pin is configured as digital
 
 ### void writeInterruptConfig(uint8_t interrupt)
 
-This method  is used for enabling or disabling the interrupt source selectively. When an interrupt event occurs, the INT pin goes low and the event is stored in the status register.
+This method is used for enabling or disabling the interrupt source selectively. When an interrupt event occurs, the INT pin goes low and the event is stored in the status register.
 
 | Parameter   | Description   |
 |:-----------:|:-------------|
@@ -227,7 +227,7 @@ This method auto configures the **INTCONF** register according to the attached c
 
 ### void writeDoublePushPeriod(uint8_t dperiod)
 
-This method is used for setting the window period **DPPERIOD** of the double push of the rotary encoder switch. When the value is 0, the double push option is disabled.
+This method is used for setting the window period **DPPERIOD** of the double push of the central button. When the value is 0, the double push option is disabled.
 The I2C NavKey will multiplies this value by 10 (value x10).
 
 #### Examples:
@@ -283,7 +283,7 @@ In case an event of the I2STATUS  register, the I2STATUS is automatically be rea
 
 ```C++
   if ( navkey.updateStatus() == true) {
-  // Somthing happens
+  // Something happens
   }
 ```
 
@@ -292,7 +292,7 @@ In case an event of the I2STATUS  register, the I2STATUS is automatically be rea
 ### bool readStatus(uint8_t s)
 
 Must be called after **updateStatus()**, this method is used for checking if some event occurs on the **ISTATUS** register.
-Return value is **true** in case of the event occured, otherwise is **false**
+Return value is **true** in case of the event occurred, otherwise is **false**
 Possible parameters are:
 
 | Parameter   | Description   |
@@ -347,13 +347,13 @@ Possible parameters are:
 
 ### uint8_t readStatus(void)
 
-Return the status of the register **ISTATUS**
+Return the status of the register **ESTATUS**
 
 
 
 ### bool readInt2(uint8_t s)
 Must be called after **updateStatus()**, this method is used for checking if some event occurred on the secondary interrupt status **I2STATUS** register.
-Return value is **true** in case of the event occured, otherwise is **false**
+Return value is **true** in case of the event occurred, otherwise is **false**
 Possible parameters are:
 
 | Parameter   | Description   |
@@ -468,12 +468,12 @@ If the **GP1** is configured as analog, it's possible to read the 8bit of the AD
 
 ### uint8_t readGP2(void)
 Return the value of the GP2REG register. 
-If the **GP2** is configured as input, it's possbile to read the logic status of the pin: *1* when the pin is high, otherwise *0*.
+If the **GP2** is configured as input, it's possible to read the logic status of the pin: *1* when the pin is high, otherwise *0*.
 If the **GP2** is configured as analog, it's possible to read the 8bit of the ADC.
 
 ### uint8_t readGP3(void)
 Return the value of the GP3REG register. 
-If the **GP3** is configured as input, it's possbile to read the logic status of the pin: *1* when the pin is high, otherwise *0*.
+If the **GP3** is configured as input, it's possible to read the logic status of the pin: *1* when the pin is high, otherwise *0*.
 If the **GP3** is configured as analog, it's possible to read the 8bit of the ADC. 
 
 ### uint8_t readAntibouncingPeriod(void)
@@ -502,17 +502,16 @@ Read a generic register of the I2C Encoder V2, in 32bit format.
 The input parameter is starting  address of the registers. 
 
 ### uint8_t readIDCode(void)
-Return the ID code of the I2C NavKey, it's a fized number 0x5B
+Return the ID code of the I2C NavKey, it's a fixed number 0x5B
 
 ### uint8_t readVersion(void)
 Return the version of the  I2C NavKey.
+
 
 ## Writing methods
 
 ###  void writeCounter(int32_t counter)
 Write the counter value register with a  **int32_t** number. All of the 4 bytes are wrote.
-
-
 
 ###  void writeCounter(float counter)
 Write the counter value register with a  **float** number. All of the 4 bytes are wrote.

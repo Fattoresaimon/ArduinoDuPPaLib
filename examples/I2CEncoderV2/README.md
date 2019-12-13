@@ -43,7 +43,7 @@ Each class has also a public variable called **id** that is used for setting a c
 i2cEncoderLibV2 encoder(0x30);
 encoder.id=1 
 ```
-The **id** can be useful when you declare an array of i2cEncoderLibV2 calss. The **id** can be used as a index in the loops.
+The **id** can be useful when you declare an array of i2cEncoderLibV2 class. The **id** can be used as a index in the loops.
 
 ## Callback Configuration
 
@@ -121,8 +121,8 @@ The possible parameters are the following:
 | DIRE_LEFT | Rotate left side to increase the value counter |
 | DIRE_RIGHT | Rotate right side to increase the value counter |
 | | |
-| IPUP_DISABLE | Disable the internall pull-up on the INT pin |
-| IPUP_ENABLE | Enable the internall pull-up on the INT pin |
+| IPUP_DISABLE | Disable the internal pull-up on the INT pin |
+| IPUP_ENABLE | Enable the internal pull-up on the INT pin |
 | | |
 | RMOD_X2 | Encoder in X2 mode |
 | RMOD_X1 | Encoder in X1 mode |
@@ -135,8 +135,8 @@ The possible parameters are the following:
 | | |
 | RESET | Reset the board |
 | | |
-| CLK_STRECH_ENABLE | Enable the I2C clock streach (only v2.1) |
-| CLK_STRECH_DISABLE | Disable the I2C clock streach (only v2.1) |
+| CLK_STRECH_ENABLE | Enable the I2C clock stretch (only v2.1) |
+| CLK_STRECH_DISABLE | Disable the I2C clock stretch (only v2.1) |
 | | |
 | REL_MODE_ENABLE | Enable the CVAL relative mode (only v2.1)|
 | REL_MODE_DISABLE | Disable the CVAL relative mode (only v2.1) |
@@ -171,10 +171,10 @@ The interrupt configurations are used only when the pin is configured as digital
 
 | Parameter   | Description   |
 |:-----------:|:-------------|
-|GP_PWM| Se the GP pin as PWM output|
-|GP_OUT| Se the GP pin as digital output|
-|GP_AN| Se the GP pin as analog input|
-|GP_IN| Se the GP pin as digital input output|
+|GP_PWM| Set the GP pin as PWM output|
+|GP_OUT| Set the GP pin as digital output|
+|GP_AN| Set the GP pin as analog input|
+|GP_IN| Set the GP pin as digital input output|
 |||
 |GP_PULL_EN| Enable the internal pull-up of the pin|
 |GP_PULL_DI| Disable the internal pull-up of the pin|
@@ -285,7 +285,7 @@ In case an event of the I2STATUS  register, the I2STATUS is automatically be rea
 
 ```C++
   if ( Encoder.updateStatus() == true) {
-  // Somthing happens
+  // Something happens
   }
 ```
 
@@ -344,7 +344,7 @@ Return the status of the register **ESTATUS**
 
 ### bool readInt2(Int2_Status s)
 Must be called after **updateStatus()**, this method is used for checking if some event occurred on the secondary interrupt status **I2STATUS** register.
-Return value is **true** in case of the event occured, otherwise is **false**
+Return value is **true** in case of the event occurred, otherwise is **false**
 Possible parameters are:
 
 | Parameter   | Description   |
@@ -464,12 +464,12 @@ If the **GP1** is configured as analog, it's possible to read the 8bit of the AD
 
 ### uint8_t readGP2(void)
 Return the value of the GP2REG register. 
-If the **GP2** is configured as input, it's possbile to read the logic status of the pin: *1* when the pin is high, otherwise *0*.
+If the **GP2** is configured as input, it's possible to read the logic status of the pin: *1* when the pin is high, otherwise *0*.
 If the **GP2** is configured as analog, it's possible to read the 8bit of the ADC.
 
 ### uint8_t readGP3(void)
 Return the value of the GP3REG register. 
-If the **GP3** is configured as input, it's possbile to read the logic status of the pin: *1* when the pin is high, otherwise *0*.
+If the **GP3** is configured as input, it's possible to read the logic status of the pin: *1* when the pin is high, otherwise *0*.
 If the **GP3** is configured as analog, it's possible to read the 8bit of the ADC. 
 
 ### uint8_t readAntibouncingPeriod(void)
@@ -576,7 +576,7 @@ This method is used to set a gamma correction for the RGB led of the encoder and
 | Parameter   | Description   |
 |:-----------:|:-------------|
 | GAMMA_OFF   | Gamma correction is OFF |
-| GAMMA_1   | Gamma is 1, in thi case the PWM is lenear |
+| GAMMA_1   | Gamma is 1, in this case the PWM is linear |
 | GAMMA_1_8   | Gamma is 1.8 |
 | GAMMA_2   | Gamma is 2 |
 | GAMMA_2_2   | Gamma is 2.2 |
@@ -595,6 +595,6 @@ This method is used to set a gamma correction for the RGB led of the encoder and
 ### void writeEEPROM(uint8_t add, uint8_t data)
 Write the EEPROM memory.
 The input parameter *add* is the address. This method automatically change the first or the second bank.
-The input parameter *data* is the data taht will be written.
-If the I2C clock streach is disabled, a delay of 5ms is added.
+The input parameter *data* is the data that will be written.
+If the I2C clock stretch is disabled, a delay of 5ms is added.
 
