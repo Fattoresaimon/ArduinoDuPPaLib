@@ -1,5 +1,5 @@
 #include <Wire.h>
-#include <I2CNavKey.h>
+#include <i2cNavKey.h>
 
 /*This is a basic example for using the I2C navkey V2
   Every time a button is pressed it's printed on the terminal.
