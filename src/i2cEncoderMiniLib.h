@@ -50,7 +50,7 @@ class i2cEncoderMiniLib {
       REG_IDCODE = 0x70,
       REG_VERSION = 0x71,
       REG_I2CADDRESS = 0x72,
-      REG_EEPROMS = 0x80,
+      REG_EEPROMS = 0x81,
     } I2C1_REGISTER;
 
 
