@@ -18,7 +18,7 @@
 /*********************************** Public functions *************************************/
 /** Class costructor **/
 i2cEncoderMiniLib::i2cEncoderMiniLib(uint8_t add) {
-  _add = add;
+  address = add;
 }
 
 /** Used for initialize the I2C Encoder Mini **/
@@ -231,6 +231,7 @@ void i2cEncoderMiniLib::ChangeI2CAddress(uint8_t add) {
   writeEncoder(REG_I2CADDRESS, add);
   writeEncoder(REG_I2CADDRESS, add);
   writeEncoder(REG_I2CADDRESS, add);
+  delay(100);
 }
 
 /** Write the EEPROM memory**/
@@ -247,10 +248,10 @@ void i2cEncoderMiniLib::writeEEPROM(uint8_t add, uint8_t data) {
 uint8_t i2cEncoderMiniLib::readEncoderByte(uint8_t reg) {
   byte rdata = 0xFF;
 
-  Wire.beginTransmission(_add);
+  Wire.beginTransmission(address);
   Wire.write(reg);
   Wire.endTransmission();
-  Wire.requestFrom(_add, (uint8_t) 1);
+  Wire.requestFrom(address, (uint8_t) 1);
   if (Wire.available()) {
     rdata = Wire.read();
   }
@@ -259,10 +260,10 @@ uint8_t i2cEncoderMiniLib::readEncoderByte(uint8_t reg) {
 
 /** Read 2 bytes from the encoder **/
 int16_t i2cEncoderMiniLib::readEncoderInt(uint8_t reg) {
-  Wire.beginTransmission(_add);
+  Wire.beginTransmission(address);
   Wire.write(reg);
   Wire.endTransmission();
-  Wire.requestFrom(_add, (uint8_t) 4);
+  Wire.requestFrom(address, (uint8_t) 4);
   if (Wire.available()) {
     _tem_data.bval[1] = Wire.read();
     _tem_data.bval[0] = Wire.read();
@@ -273,10 +274,10 @@ int16_t i2cEncoderMiniLib::readEncoderInt(uint8_t reg) {
 /** Read 4 bytes from the encoder **/
 int32_t i2cEncoderMiniLib::readEncoderLong(uint8_t reg) {
 
-  Wire.beginTransmission(_add);
+  Wire.beginTransmission(address);
   Wire.write(reg);
   Wire.endTransmission();
-  Wire.requestFrom(_add, (uint8_t) 4);
+  Wire.requestFrom(address, (uint8_t) 4);
   if (Wire.available()) {
     _tem_data.bval[3] = Wire.read();
     _tem_data.bval[2] = Wire.read();
@@ -290,7 +291,7 @@ int32_t i2cEncoderMiniLib::readEncoderLong(uint8_t reg) {
 /** Send to the encoder 1 byte **/
 void i2cEncoderMiniLib::writeEncoder(uint8_t reg, uint8_t data) {
 
-  Wire.beginTransmission(_add);
+  Wire.beginTransmission(address);
   Wire.write(reg);
   Wire.write(data);
   Wire.endTransmission();
@@ -304,7 +305,7 @@ void i2cEncoderMiniLib::writeEncoder(uint8_t reg, int32_t data) {
   temp[1] = _tem_data.bval[2];
   temp[2] = _tem_data.bval[1];
   temp[3] = _tem_data.bval[0];
-  Wire.beginTransmission(_add);
+  Wire.beginTransmission(address);
   Wire.write(reg);
   Wire.write(temp, (uint8_t) 4);
   Wire.endTransmission();

@@ -87,6 +87,7 @@ class i2cEncoderMiniLib {
     };
 
     uint8_t id = 0x00;
+	uint8_t address = 0x00;
     typedef void (*Callback)(i2cEncoderMiniLib*);
 
     /* Event */
@@ -151,7 +152,7 @@ class i2cEncoderMiniLib {
 
   private:
 
-    uint8_t _add = 0x00;
+    
     uint8_t _stat = 0x00;
     uint8_t _gconf = 0x00;
     union Data_v _tem_data;

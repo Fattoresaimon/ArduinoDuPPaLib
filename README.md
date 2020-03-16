@@ -10,6 +10,7 @@ Currently supported boards:
 
 - [I2C Encoder V2](https://github.com/Fattoresaimon/I2CEncoderV2) Library description [here](https://github.com/Fattoresaimon/ArduinoDuPPaLib/blob/master/examples/I2CEncoderV2/README.md)
 - [I2C NavKey](https://github.com/Fattoresaimon/I2CNavKey) Library description [here](https://github.com/Fattoresaimon/ArduinoDuPPaLib/blob/master/examples/I2CNavKey/README.md)
+- [I2C Encoder Mini](https://github.com/Fattoresaimon/I2CEncoderMini) Library description [here](https://github.com/Fattoresaimon/ArduinoDuPPaLib/blob/master/examples/I2CEncoderMini/README.md)
 
 
 
