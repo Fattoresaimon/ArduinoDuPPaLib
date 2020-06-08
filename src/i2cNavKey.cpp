@@ -375,6 +375,9 @@ void i2cNavKey::autoconfigInterrupt(void) {
 	if (onCentralDoublePush != NULL)
 		reg |= CTRDP;
 
+	if (onIncrement != NULL)
+		reg |= RINC;
+
 	if (onDecrement != NULL)
 		reg |= RDEC;
 
