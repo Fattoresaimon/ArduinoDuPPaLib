@@ -226,7 +226,7 @@ void i2cEncoderMiniLib::writeDoublePushPeriod(uint8_t dperiod) {
   writeEncoder(REG_DPPERIOD, dperiod);
 }
 
-/** Write Anti-bouncing period register **/
+/** Change MiniEncoder I2C address **/
 void i2cEncoderMiniLib::ChangeI2CAddress(uint8_t add) {
   writeEncoder(REG_I2CADDRESS, add);
   writeEncoder(REG_I2CADDRESS, add);

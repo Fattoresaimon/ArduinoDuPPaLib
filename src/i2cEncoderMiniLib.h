@@ -126,7 +126,6 @@ class i2cEncoderMiniLib {
     int32_t readStep(void);
 
     /** Timing registers **/
-    uint8_t readAntibouncingPeriod(void);
     uint8_t readDoublePushPeriod(void);
     uint8_t readIDCode(void);
     uint8_t readVersion(void);
@@ -144,7 +143,6 @@ class i2cEncoderMiniLib {
     void writeStep(int32_t step);
 
     /** Timing registers **/
-    void writeAntibouncingPeriod(uint8_t bounc);
     void writeDoublePushPeriod(uint8_t dperiod);
     void ChangeI2CAddress(uint8_t add);
     /** EEPROM register **/
