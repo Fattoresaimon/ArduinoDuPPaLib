@@ -162,7 +162,7 @@ void i2cEncoderMiniLib::writeInterruptConfig(uint8_t interrupt) {
 
 /** Check if there is some attached callback and enable the corresponding interrupt **/
 void i2cEncoderMiniLib::autoconfigInterrupt(void) {
-  uint8_t reg;
+  uint8_t reg=0;
 
   if (onButtonRelease != NULL)
     reg |= PUSHR;
