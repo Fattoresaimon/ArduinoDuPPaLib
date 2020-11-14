@@ -20,7 +20,7 @@ LEDRing::LEDRing(uint8_t add) {
 }
 
 
-void LEDRing::PWM_MODE(void) {
+void LEDRing::LEDRing_PWM_MODE(void) {
   selectBank(ISSI_PAGE2);
 }
 
@@ -34,29 +34,29 @@ void  LEDRing::LEDRing_Reset(void) {
 
 }
 
-void LEDRing::Configuration(uint8_t conf) {
+void LEDRing::LEDRing_Configuration(uint8_t conf) {
   selectBank(ISSI_PAGE4);
   writeRegister8(ISSI_CONFIGURATION, conf);
 }
 
-void LEDRing::PULLUP(uint8_t pull) {
+void LEDRing::LEDRing_PULLUP(uint8_t pull) {
   selectBank(ISSI_PAGE4);
   writeRegister8(ISSI_PULLUP, pull);
 }
 
-void LEDRing::PULLDOWN(uint8_t pull) {
+void LEDRing::LEDRing_PULLDOWN(uint8_t pull) {
   selectBank(ISSI_PAGE4);
   writeRegister8(ISSI_PULLDOWN, pull);
 }
 
 
-void LEDRing::GlobalCurrent(uint8_t curr) {
+void LEDRing::LEDRing_GlobalCurrent(uint8_t curr) {
   selectBank(ISSI_PAGE4);
   writeRegister8(ISSI_GLOBALCURRENT, curr);
 }
 
 
-void LEDRing::EnableAllOutput(void) {
+void LEDRing::LEDRing_EnableAllOutput(void) {
   selectBank(ISSI_PAGE1);
   for (uint8_t i = 0; i < 0x24; i++) {
     writeRegister8(i, 0xff);
@@ -69,38 +69,6 @@ void  LEDRing::LEDRing_Set_RGB(uint8_t led_n, uint32_t color) {
   writeRegister8(issi_led_map[1][led_n], ((color >> 8) & 0xFF));
   writeRegister8(issi_led_map[2][led_n], (color & 0xFF));
 
-  //  uint8_t temp_add;
-  //  if (led_n < 12) {
-  //    temp_add = issi_led_map[led_n];
-  //    writeRegister8((temp_add | 0xB0), ((color >> 16) & 0xFF));
-  //    writeRegister8((temp_add | 0xA0), ((color >> 8) & 0xFF));
-  //    writeRegister8((temp_add | 0x90), (color & 0xFF));
-  //    return;
-  //  }
-  //
-  //  if (led_n < 24) {
-  //    temp_add = issi_led_map[led_n - 12];
-  //    writeRegister8((temp_add | 0x80), ((color >> 16) & 0xFF));
-  //    writeRegister8((temp_add | 0x70), ((color >> 8) & 0xFF));
-  //    writeRegister8((temp_add | 0x60), (color & 0xFF));
-  //    return;
-  //  }
-  //
-  //  if (led_n < 36) {
-  //    temp_add = issi_led_map[led_n - 24];
-  //    writeRegister8((temp_add | 0x50), ((color >> 16) & 0xFF));
-  //    writeRegister8((temp_add | 0x40), ((color >> 8) & 0xFF));
-  //    writeRegister8((temp_add | 0x30), (color & 0xFF));
-  //    return;
-  //  }
-  //  if (led_n < 48) {
-  //    temp_add = issi_led_map[led_n - 36];
-  //    writeRegister8((temp_add | 0x20), ((color >> 16) & 0xFF));
-  //    writeRegister8((temp_add | 0x10), ((color >> 8) & 0xFF));
-  //    writeRegister8(temp_add, (color & 0xFF));
-  //    return;
-  //  }
-  //
 }
 
 
@@ -108,91 +76,21 @@ void  LEDRing::LEDRing_Set_RED(uint8_t led_n, uint8_t color) {
 
   writeRegister8(issi_led_map[0][led_n], color);
 
-  //  uint8_t temp_add;
-  //  if (led_n < 12) {
-  //    temp_add = issi_led_map[led_n];
-  //    writeRegister8((temp_add | 0xB0), color);
-  //    return;
-  //  }
-  //
-  //  if (led_n < 24) {
-  //    temp_add = issi_led_map[led_n - 12];
-  //    writeRegister8((temp_add | 0x80), color);
-  //    return;
-  //  }
-  //
-  //  if (led_n < 36) {
-  //    temp_add = issi_led_map[led_n - 24];
-  //    writeRegister8((temp_add | 0x50), color);
-  //    return;
-  //  }
-  //  if (led_n < 48) {
-  //    temp_add = issi_led_map[led_n - 36];
-  //    writeRegister8((temp_add | 0x20), color);
-  //    return;
-  //  }
 }
 
 void  LEDRing::LEDRing_Set_GREEN(uint8_t led_n, uint8_t color) {
 
   writeRegister8(issi_led_map[1][led_n], color);
-
-  //  uint8_t temp_add;
-  //  if (led_n < 12) {
-  //    temp_add = issi_led_map[led_n];
-  //    writeRegister8((temp_add | 0xA0), color);
-  //    return;
-  //  }
-  //
-  //  if (led_n < 24) {
-  //    temp_add = issi_led_map[led_n - 12];
-  //    writeRegister8((temp_add | 0x70), color);
-  //    return;
-  //  }
-  //
-  //  if (led_n < 36) {
-  //    temp_add = issi_led_map[led_n - 24];
-  //    writeRegister8((temp_add | 0x40), color);
-  //    return;
-  //  }
-  //  if (led_n < 48) {
-  //    temp_add = issi_led_map[led_n - 36];
-  //    writeRegister8((temp_add | 0x10), color);
-  //    return;
-  //  }
 }
 
 void  LEDRing::LEDRing_Set_BLUE(uint8_t led_n, uint8_t color) {
 
   writeRegister8(issi_led_map[2][led_n], color);
 
-  //  uint8_t temp_add;
-  //  if (led_n < 12) {
-  //    temp_add = issi_led_map[led_n];
-  //    writeRegister8((temp_add | 0x90), color);
-  //    return;
-  //  }
-  //
-  //  if (led_n < 24) {
-  //    temp_add = issi_led_map[led_n - 12];
-  //    writeRegister8((temp_add | 0x60), color);
-  //    return;
-  //  }
-  //
-  //  if (led_n < 36) {
-  //    temp_add = issi_led_map[led_n - 24];
-  //    writeRegister8((temp_add | 0x30), color);
-  //    return;
-  //  }
-  //  if (led_n < 48) {
-  //    temp_add = issi_led_map[led_n - 36];
-  //    writeRegister8(temp_add, color);
-  //    return;
-  //  }
 }
 
 
-void  LEDRing::ClearAll(void) {
+void  LEDRing::LEDRing_ClearAll(void) {
   uint8_t   buff[6] = {0};
   uint8_t i = 0x00;
   PWM_MODE();

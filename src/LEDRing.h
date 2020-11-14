@@ -42,19 +42,19 @@ class LEDRing {
   public:
 
     LEDRing(uint8_t add);
-    void PWM_MODE(void);
-    void ClearAll(void);
+    void LEDRing_PWM_MODE(void);
+    void LEDRing_ClearAll(void);
     void LEDRing_Set_RGB(uint8_t led_n, uint32_t color);
     void LEDRing_Set_RED(uint8_t led_n, uint8_t color);
     void LEDRing_Set_GREEN(uint8_t led_n, uint8_t color);
     void LEDRing_Set_BLUE(uint8_t led_n, uint8_t color);
 
     void LEDRing_Reset(void);
-    void EnableAllOutput(void);
-    void GlobalCurrent(uint8_t curr);
-    void Configuration(uint8_t conf);
-    void PULLUP(uint8_t pull);
-    void PULLDOWN(uint8_t pull);
+    void LEDRing_EnableAllOutput(void);
+    void LEDRing_GlobalCurrent(uint8_t curr);
+    void LEDRing_Configuration(uint8_t conf);
+    void LEDRing_PULLUP(uint8_t pull);
+    void LEDRing_PULLDOWN(uint8_t pull);
 
 
 

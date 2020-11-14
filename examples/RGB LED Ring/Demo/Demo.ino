@@ -30,12 +30,12 @@ void setup(void) {
   LEDRing.LEDRing_Reset();
   delay(20);
 
-  LEDRing.EnableAllOutput();
-  LEDRing.Configuration(0x01); //Normal operation
-  LEDRing.GlobalCurrent(0xff); // maximum current output
-  LEDRing.PULLUP(0b111); // 32k pull-up resistor for avoid ghost effect
-  LEDRing.PULLDOWN(0b111); // 32k pull-down resistor for avoid ghost effect
-  LEDRing.PWM_MODE(); //Exit to the configuration mode and enter in PWM mode
+  LEDRing.LEDRing_EnableAllOutput();
+  LEDRing.LEDRing_Configuration(0x01); //Normal operation
+  LEDRing.LEDRing_GlobalCurrent(0xff); // maximum current output
+  LEDRing.LEDRing_PULLUP(0b111); // 32k pull-up resistor for avoid ghost effect
+  LEDRing.LEDRing_PULLDOWN(0b111); // 32k pull-down resistor for avoid ghost effect
+  LEDRing.LEDRing_PWM_MODE(); //Exit to the configuration mode and enter in PWM mode
 
 }
 
@@ -69,7 +69,7 @@ void loop() {
     LEDRing.LEDRing_Set_RGB(i, 0xFF9933);
     delay(15);
   }
-  LEDRing.ClearAll();
+  LEDRing.LEDRing_ClearAll();
 
 
   for (tim = 0; tim < 2000; tim++) {
@@ -161,12 +161,12 @@ void loop() {
 
   for (i = 0xff; i > 0; i--) {
 
-    LEDRing.GlobalCurrent(i);
+    LEDRing.LEDRing_GlobalCurrent(i);
     delay(10);
   }
-  LEDRing.ClearAll();
-  LEDRing.GlobalCurrent(0xff);
+  LEDRing.LEDRing_ClearAll();
+  LEDRing.LEDRing_GlobalCurrent(0xff);
   delay(1000);
-  LEDRing.PWM_MODE(); //Exit to the configuration mode and enter in PWM mode
+  LEDRing.LEDRing_PWM_MODE(); //Exit to the configuration mode and enter in PWM mode
 
 }
