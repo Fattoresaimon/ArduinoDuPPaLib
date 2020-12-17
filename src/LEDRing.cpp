@@ -93,7 +93,7 @@ void  LEDRing::LEDRing_Set_BLUE(uint8_t led_n, uint8_t color) {
 void  LEDRing::LEDRing_ClearAll(void) {
   uint8_t   buff[6] = {0};
   uint8_t i = 0x00;
-  PWM_MODE();
+  LEDRing_PWM_MODE();
   while (i <= 0xB0) {
     writeBuff(i, buff, 6);
     writeBuff((i + 0x08), buff, 6);
