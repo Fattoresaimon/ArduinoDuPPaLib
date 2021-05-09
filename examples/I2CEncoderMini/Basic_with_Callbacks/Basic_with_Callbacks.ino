@@ -16,7 +16,7 @@
 
 const int IntPin = A3; /* Definition of the interrupt pin. You can change according to your board */
 //Class initialization with the I2C addresses
-i2cEncoderMiniLib Encoder(0x20); /* A0 is soldered */
+i2cEncoderMiniLib Encoder(0x20);
 
 //Callback when the CVAL is incremented
 void encoder_increment(i2cEncoderMiniLib* obj) {
