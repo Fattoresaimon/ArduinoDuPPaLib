@@ -22,7 +22,8 @@ i2cEncoderLibV2::i2cEncoderLibV2(uint8_t add) {
 }
 
 /** Used for initialize the encoder **/
-void i2cEncoderLibV2::begin(uint16_t conf) {
+bool i2cEncoderLibV2::begin(uint16_t conf) {
+	uint16_t gconf;
 
 	writeEncoder(REG_GCONF, (uint8_t)( conf & 0xFF));
 	writeEncoder(REG_GCONF2, (uint8_t)((conf >> 8) & 0xFF));
@@ -31,6 +32,9 @@ void i2cEncoderLibV2::begin(uint16_t conf) {
 		_clockstreach = 0;
 	else
 		_clockstreach = 1;
+
+	gconf = (readEncoderByte(REG_GCONF2) << 8) | readEncoderByte(REG_GCONF);
+	return (conf == gconf);
 }
 
 /** Reset the board **/

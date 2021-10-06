@@ -22,10 +22,11 @@ i2cEncoderMiniLib::i2cEncoderMiniLib(uint8_t add) {
 }
 
 /** Used for initialize the I2C Encoder Mini **/
-void i2cEncoderMiniLib::begin(uint8_t conf) {
+bool i2cEncoderMiniLib::begin(uint8_t conf) {
 
   writeEncoder(REG_GCONF, (uint8_t) conf);
   _gconf = conf;
+  return (conf == readEncoderByte(REG_GCONF));
 }
 
 /** Used for reset the I2C Encoder Mini **/
