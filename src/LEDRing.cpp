@@ -12,55 +12,63 @@
 // Simone Caron
 //
 
+// datasheet of the controller: https://www.lumISSI3745l.com/assets/pdf/core/IS31FL3745_DS.pdf
+
 #include "LEDRing.h"
 #include <Wire.h>
 
 LEDRing::LEDRing(uint8_t add) {
   _add = add;
+
 }
 
 
 void LEDRing::LEDRing_PWM_MODE(void) {
-  selectBank(ISSI_PAGE2);
-}
-
-void  LEDRing::LEDRing_Reset(void) {
-  selectBank(ISSI_PAGE4);
-  Wire.beginTransmission(_add);
-  Wire.write((byte)RESET_REG);
-  Wire.endTransmission();
-  Wire.requestFrom(_add, (uint8_t) 1);
-  Wire.endTransmission();
-
+  selectBank(ISSI3745_PAGE0);
 }
 
 void LEDRing::LEDRing_Configuration(uint8_t conf) {
-  selectBank(ISSI_PAGE4);
-  writeRegister8(ISSI_CONFIGURATION, conf);
+  selectBank(ISSI3745_PAGE2);
+  writeRegister8(ISSI3745_CONFIGURATION, conf);
 }
 
-void LEDRing::LEDRing_PULLUP(uint8_t pull) {
-  selectBank(ISSI_PAGE4);
-  writeRegister8(ISSI_PULLUP, pull);
+void LEDRing::LEDRing_SetScaling(uint8_t led_n, uint8_t scal) {
+  selectBank(ISSI3745_PAGE1);
+  writeRegister8(led_n, scal);
 }
 
-void LEDRing::LEDRing_PULLDOWN(uint8_t pull) {
-  selectBank(ISSI_PAGE4);
-  writeRegister8(ISSI_PULLDOWN, pull);
-}
+void LEDRing::LEDRing_SetScaling(uint8_t scal) {
+  selectBank(ISSI3745_PAGE1);
 
+  for (uint8_t i = 1; i < 145; i++) {
+    writeRegister8(i, scal);
+  }
+}
 
 void LEDRing::LEDRing_GlobalCurrent(uint8_t curr) {
-  selectBank(ISSI_PAGE4);
-  writeRegister8(ISSI_GLOBALCURRENT, curr);
+  selectBank(ISSI3745_PAGE2);
+  writeRegister8(ISSI3745_GLOBALCURRENT, curr);
 }
 
+void LEDRing::LEDRing_PULLUP_DOWN(uint8_t pull) {
+  selectBank(ISSI3745_PAGE2);
+  writeRegister8(ISSI3745_PULLUPDOWM, pull);
+}
 
-void LEDRing::LEDRing_EnableAllOutput(void) {
-  selectBank(ISSI_PAGE1);
-  for (uint8_t i = 0; i < 0x24; i++) {
-    writeRegister8(i, 0xff);
-  }
+uint8_t LEDRing::LEDRing_Temperature(void) {
+  selectBank(ISSI3745_PAGE2);
+  return (readRegister8(ISSI3745_TEMPERATURE));
+}
+
+void LEDRing::LEDRing_SpreadSpectrum(uint8_t spread) {
+  selectBank(ISSI3745_PAGE2);
+  writeRegister8(ISSI3745_SPREADSPECTRUM, spread);
+}
+
+void  LEDRing::LEDRing_Reset(void) {
+  selectBank(ISSI3745_PAGE2);
+  writeRegister8(ISSI3745_RESET_REG, 0xAE);
+
 }
 
 void  LEDRing::LEDRing_Set_RGB(uint8_t led_n, uint32_t color) {
@@ -70,7 +78,6 @@ void  LEDRing::LEDRing_Set_RGB(uint8_t led_n, uint32_t color) {
   writeRegister8(issi_led_map[2][led_n], (color & 0xFF));
 
 }
-
 
 void  LEDRing::LEDRing_Set_RED(uint8_t led_n, uint8_t color) {
 
@@ -91,19 +98,19 @@ void  LEDRing::LEDRing_Set_BLUE(uint8_t led_n, uint8_t color) {
 
 
 void  LEDRing::LEDRing_ClearAll(void) {
-  uint8_t   buff[6] = {0};
-  uint8_t i = 0x00;
+  uint8_t i;
+
   LEDRing_PWM_MODE();
-  while (i <= 0xB0) {
-    writeBuff(i, buff, 6);
-    writeBuff((i + 0x08), buff, 6);
-    i = i + 0x10;
+
+  for (i = 1; i < 145; i++) {
+	  writeRegister8(i,0);
   }
+
 }
 
 void  LEDRing::selectBank(uint8_t b) {
-  writeRegister8(ISSI_COMMANDREGISTER_LOCK, ISSI_ULOCK_CODE);
-  writeRegister8(ISSI_COMMANDREGISTER, b);
+  writeRegister8(ISSI3745_COMMANDREGISTER_LOCK, ISSI3745_ULOCK_CODE);
+  writeRegister8(ISSI3745_COMMANDREGISTER, b);
 }
 
 void LEDRing::writeRegister8(uint8_t reg, uint8_t data) {
@@ -119,4 +126,17 @@ void LEDRing::writeBuff(uint8_t reg, uint8_t *data, uint8_t dim) {
   Wire.write(data, dim);
   Wire.endTransmission();
 
+}
+
+uint8_t LEDRing::readRegister8(uint8_t reg) {
+  byte rdata = 0xFF;
+
+  Wire.beginTransmission(_add);
+  Wire.write(reg);
+  Wire.endTransmission();
+  Wire.requestFrom(_add, (uint8_t) 1);
+  if (Wire.available()) {
+    rdata = Wire.read();
+  }
+  return rdata;
 }
