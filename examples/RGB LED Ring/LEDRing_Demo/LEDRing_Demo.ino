@@ -3,13 +3,16 @@
 
 
 /*
-
-  Connections with Arduino UNO:
-  - -> GND
-  + -> 5V
-  SDA -> A4
-  SCL -> A5
-  INT -> A3
+Board Pinout
++-----+--------+----------+-------------+
+| Pin | Color  | Function | Arduino pin |
++-----+--------+----------+-------------+
+|   1 | Red    | VCC      | +5V         |
+|   2 | Black  | GND      | GND         |
+|   3 | Yellow | VIO      | +5V         |
+|   4 | Green  | SDA      | A4          |
+|   5 | Blue   | SCL      | A5          |
++-----+--------+----------+-------------+
 */
 
 const  uint32_t fade1_table[48] = {0x8011EE, 0x900AE5, 0xA004DA, 0xB001CD, 0xBF00BF, 0xCD01B0, 0xDA04A0, 0xE50A90, 0xEE1180, 0xF51A6F, 0xFB255F, 0xFE324F, 0xFF4040, 0xFE4F32, 0xFB5F25, 0xF56F1A, 0xEE8011, 0xE5900A, 0xDAA004, 0xCDB001, 0xBFBF00, 0xB0CD01, 0xA0DA04, 0x90E50A, 0x80EE11, 0x6FF51A, 0x5FFB25, 0x4FFE32, 0x40FF40, 0x32FE4F, 0x25FB5F, 0x1AF56F, 0x11EE80, 0x0AE590, 0x04DAA0, 0x01CDB0, 0x00BFBF, 0x01B0CD, 0x04A0DA, 0x0A90E5, 0x1180EE, 0x1A6FF5, 0x255FFB, 0x324FFE, 0x4040FF, 0x4F32FE, 0x5F25FB, 0x6F1AF5, };
@@ -19,7 +22,8 @@ static uint8_t i = 0;
 static uint16_t tim = 0;
 static uint8_t r = 5, g = 8, b = 20, rg = 40, br = 35, bg = 17;
 
-LEDRing LEDRing(ISSI3745_SJ1 | ISSI3745_SJ5);
+LEDRing LEDRing(ISSI3745_SJ1 | ISSI3745_SJ5); //Only SJ1 and SJ5 are soldered in this example
+// Also check if there are the pull-UP resistors on the I2C bus. If no or the board doesn't want to work please also solder the jumper SJ9
 
 void setup(void) {
 

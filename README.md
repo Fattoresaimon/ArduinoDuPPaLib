@@ -2,7 +2,7 @@
 
 In this repository there is a library collection of the DuPPa boards for the Arduino IDE.
 
-All the boards are available on [Tindie!](https://www.tindie.com/stores/Saimon/)
+All the boards are available on [DuPPa Store!](https://www.duppa.net/product-category/i2c-devices/)
 
 
 
@@ -12,7 +12,7 @@ Currently supported boards:
 - [I2C NavKey](https://github.com/Fattoresaimon/I2CNavKey) Library description [here](https://github.com/Fattoresaimon/ArduinoDuPPaLib/blob/master/examples/I2CNavKey/README.md)
 - [I2C Encoder Mini](https://github.com/Fattoresaimon/I2CEncoderMini) Library description [here](https://github.com/Fattoresaimon/ArduinoDuPPaLib/blob/master/examples/I2CEncoderMini/README.md)
 - [RGB LED Ring](https://github.com/Fattoresaimon/RGB_LED_Ring) Library description [here](https://github.com/Fattoresaimon/ArduinoDuPPaLib/blob/master/examples/RGB%20LED%20Ring/README.md)
-
+- [RGB LED Ring Small](https://github.com/Fattoresaimon/RGB_LED_Ring_Small) Library description [here](https://github.com/Fattoresaimon/ArduinoDuPPaLib/blob/master/examples/RGB%20LED%20Ring%20Small/README.md)
 
 
 ## Installation

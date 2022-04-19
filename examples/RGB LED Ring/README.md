@@ -4,11 +4,11 @@
 
 ## Introduction
 
-Here you can find the library description of the [RGB LED Ring](https://github.com/Fattoresaimon/RGB_LED_Ring) for the Arduino IDE.
-The RGB LED Ring is based on the driver ISSI [IS31FL3737 ](http://www.issi.com/WW/pdf/31FL3737.pdf), for more functionality please check the datasheet of the driver.
+Here you can find the project  description of the [RGB LED Ring Small](https://github.com/Fattoresaimon/RGB_LED_Ring).
+The RGB LED Ring is based on the driver ISSI [IS31FL3745](https://www.lumissil.com/assets/pdf/core/IS31FL3745_DS.pdf), for more functionality please check the datasheet of the driver.
 At the moment the breathing effect are not implemented.
 
-The RGB LED Ring is available on [Tindie!]( https://www.tindie.com/products/20279/)
+The RGB LED Ring is available on [DuPPa Store!](https://www.duppa.net/shop/rgb-led-ring/)
 
 ## Initialization of the class
 
@@ -17,46 +17,57 @@ To initialize the library, you have to declare an instance of the class **LEDRin
 For example:
 
 ``` C++
-LEDRing LEDRing(0x5A);
+LEDRing LEDRing(ISSI3745_SJ1 | ISSI3745_SJ5);
 ```
-Declaration of the RGB LED Ring with the jumper 0x5A soldered
+Declaration of the RGB LED Ring with the jumper SJ1 and SJ5 soldered.
+The  RGB LED Ring v1.1 it have 8 Jumpers for setting the address, they are divided in 2 groups of 4 jumpers. Only 1 jumper per group should be soldered,  this make 16 possible combinations.
+Possible combination are the following:
+
+| Jumper first group | Jumper second group | I2C Address |
+| ------------ | ------------ | :--: |
+| ISSI3745_SJ1 | ISSI3745_SJ5 | 0x40 |
+| ISSI3745_SJ2 | ISSI3745_SJ5 | 0x42 |
+| ISSI3745_SJ3 | ISSI3745_SJ5 | 0x44 |
+| ISSI3745_SJ4 | ISSI3745_SJ5 | 0x46 |
+| ISSI3745_SJ1 | ISSI3745_SJ6 | 0x48 |
+| ISSI3745_SJ2 | ISSI3745_SJ6 | 0x4A |
+| ISSI3745_SJ3 | ISSI3745_SJ6 | 0x4C |
+| ISSI3745_SJ4 | ISSI3745_SJ6 | 0x4E |
+| ISSI3745_SJ1 | ISSI3745_SJ7 | 0x50 |
+| ISSI3745_SJ2 | ISSI3745_SJ7 | 0x52 |
+| ISSI3745_SJ3 | ISSI3745_SJ7 | 0x54 |
+| ISSI3745_SJ4 | ISSI3745_SJ7 | 0x56 |
+| ISSI3745_SJ1 | ISSI3745_SJ8 | 0x58 |
+| ISSI3745_SJ2 | ISSI3745_SJ8 | 0x5A |
+| ISSI3745_SJ3 | ISSI3745_SJ8 | 0x5C |
+| ISSI3745_SJ4 | ISSI3745_SJ8 | 0x5E |
+
 
 
 ## Configuration
 
 ### void LEDRing_Reset(void)
-Reset all the IS31FL3737 to the default state
+Reset all the IS31FL3745 to the default state
 
 ### void LEDRing_Configuration(uint8_t conf)
-This method write the register ad the address 00h of the IS31FL3737. Please refer the datasheet for further information.
+This method write the register ad the address 00h of the IS31FL3745. Please refer the datasheet for further information.
 
 ### void LEDRing_GlobalCurrent(uint8_t conf)
 This method write the register 01h and it set the LEDs current. 
 It's possible to set up to 256 step from 0 to 0xFF. 
 Higher value make the LEDs brighter.
 
-### void LEDRing_PULLUP(uint8_t pull)
-### void LEDRing_PULLDOWN(uint8_t pull)
-Configure the PULLUP or PULLDOWN resistor.
-This resistor are used for avoid the "ghost" effect in a matrix LED architecture.
-The possible value are the following:
+### void LEDRing_SetScaling(uint8_t led_n, uint8_t scal);
+Set the output current of each led. **n** is the LED number ( 1 to 144  ), **scal** is the scaling value (0 to 256)
 
-| PUR / PDR |  Value |
-| :--: | ---- |
-| 000 |  No pull-up resistor |
-| 001 | 0.5kΩ |
-| 010 | 1.0kΩ |
-| 011 | 2.0kΩ |
-| 100 | 4.0kΩ |
-| 101 | 8.0kΩ |
-| 110 | 16kΩ |
-| 111 | 32kΩ |
+### void LEDRing_SetScaling(uint8_t scal);
+Set the output current of all LED. **scal** is the scaling value (0 to 256)
 
-### void LEDRing_EnableAllOutput(void)
-This method enable all the LEDs, by default the LEDs are disabled.
+### void LEDRing_PULLUP_DOWN(uint8_t pull)
+Configure the PULLUP and PULLDOWN resistor. You can refer to the IS31FL3745 datasheet at the 02h register for further information.
 
-### void LEDRing_DisableAllOutput(void)
-This method disable all the LEDs.
+### uint8_t LEDRing_Temperature(void);
+Get the temperature status register. Refer to the IS31FL3745 datasheet at the 24h register for further information.
 
 ### void LEDRing_PWM_MODE(void)
 This method set all the LEDs in PWM mode.
