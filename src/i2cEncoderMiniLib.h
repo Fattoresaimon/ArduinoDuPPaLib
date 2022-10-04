@@ -105,7 +105,7 @@ class i2cEncoderMiniLib {
 
     /** Configuration methods **/
     i2cEncoderMiniLib(uint8_t add);
-    void begin(uint8_t conf);
+    bool begin(uint8_t conf);
     void reset(void);
     void autoconfigInterrupt(void);
 

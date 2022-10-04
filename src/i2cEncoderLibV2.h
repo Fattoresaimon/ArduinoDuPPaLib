@@ -185,7 +185,7 @@ public:
 
 	/** Configuration methods **/
 	i2cEncoderLibV2(uint8_t add);
-	void begin(uint16_t conf);
+	bool begin(uint16_t conf);
 	void reset(void);
 	void autoconfigInterrupt(void);
 
