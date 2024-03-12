@@ -1,10 +1,10 @@
 //
 //    FILE: LEDRing.h
-// VERSION: 1.0..
-// PURPOSE: Library for LEDRing from DUPPA
+// VERSION: 1.2..
+// PURPOSE: Library for LEDRing from DUPPA. chip used  IS31FL3745
 // LICENSE: GPL v3 (http://www.gnu.org/licenses/gpl.html)
 //
-// DATASHEET:
+// DATASHEET: https://www.lumissil.com/assets/pdf/core/IS31FL3745_DS.pdf
 //
 //     URL:
 //

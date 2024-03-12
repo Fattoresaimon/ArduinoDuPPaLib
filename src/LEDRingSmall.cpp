@@ -1,10 +1,10 @@
 //
 //    FILE: LEDRingSmall.c
-// VERSION: 1.0..
-// PURPOSE: Library for LEDRingSmall from DUPPA
+// VERSION: 1.2..
+// PURPOSE: Library for LEDRingSmall from DUPPA. chip used  IS31FL3746A
 // LICENSE: GPL v3 (http://www.gnu.org/licenses/gpl.html)
 //
-// DATASHEET:
+// DATASHEET: https://www.lumissil.com/assets/pdf/core/IS31FL3746A_DS.pdf
 //
 //     URL:
 //
@@ -12,7 +12,7 @@
 // Simone Caron
 //
 
-// datasheet of the controller: https://www.lumissil.com/assets/pdf/core/IS31FL3746A_DS.pdf
+
 
 #include "LEDRingSmall.h"
 #include <Wire.h>
